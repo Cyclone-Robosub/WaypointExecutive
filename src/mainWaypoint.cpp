@@ -1,6 +1,8 @@
 #include "WaypointExecutive.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include <iostream>
+#include <thread>
+
 
 // TODO:
 // Parse input commands or YAML File.
@@ -39,10 +41,11 @@ int main(int argc, char *argv[])
   std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
   executor->add_node(Node);
   std::cout << "ROS2 Waypoint running" << std::endl;
-  std::jthread spin_ros([executor]()
+  std::thread spin_ros([executor]()   // Using std::thread instead of jthread
                         { executor->spin(); });
   int ResultCode = Node->Controller();
   // This will end when it needs to ^.
+  spin_ros.join(); // Wait for the thread to finish
   rclcpp::shutdown();
   return ResultCode;
 }
