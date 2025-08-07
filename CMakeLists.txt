@@ -14,12 +14,16 @@ find_package(geometry_msgs REQUIRED)
 # Add include directories
 include_directories(src)
 include_directories(src/JSON_Parser)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(waypoint_executive
   src/mainWaypoint.cpp
   src/WaypointExecutive.cpp
   src/Task.cpp
-  src/JSON_Parser/MissionAnalyser.cpp
+  JSON_Parser/MissionAnalyser.cpp
+  crs_common/position/position.cpp
 )
 
 ament_target_dependencies(waypoint_executive

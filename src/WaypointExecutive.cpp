@@ -6,8 +6,11 @@
 void WaypointExecutive::SetupROS()
 {
   callbackINT = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  callbackPosition = this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
   auto INTOPTIONS = rclcpp::SubscriptionOptions();
   INTOPTIONS.callback_group = callbackINT;
+  auto PositionOptions = rclcpp::SubscriptionOptions();
+  PositionOptions.callback_group = callbackPosition;
 
   WaypointPublisher = this->create_publisher<std_msgs::msg::Float32MultiArray>(
       "waypoint_topic", 10);
@@ -16,6 +19,11 @@ void WaypointExecutive::SetupROS()
       std::bind(&WaypointExecutive::SOCIntCallback, this,
                 std::placeholders::_1),
       INTOPTIONS);
+  PositionSub = this->create_subscription<std_msgs::msg::Float32MultiArray>(
+      "position_topic", 10,
+      std::bind(&WaypointExecutive::PositionCallback, this,
+                std::placeholders::_1),
+      PositionOptions);
   CurrentTaskPub =
       this->create_publisher<std_msgs::msg::String>("CurrentTaskTopic", 10);
   // VisionSub =
@@ -43,7 +51,8 @@ int WaypointExecutive::Controller()
         if (!Current_Interrupts.empty())
         {
           ServiceINTofStep();
-          if(StopWorking){
+          if (StopWorking)
+          {
             return 0;
           }
         }
@@ -143,7 +152,7 @@ void WaypointExecutive::CheckINTofStep()
 void WaypointExecutive::ServiceINTofStep()
 {
   Interrupts ServiceINT = Current_Interrupts.front();
-  std::cout<< "service" << std::endl;
+  std::cout << "service" << std::endl;
   if (ServiceINT.SOCDANGER)
   {
     // Battery WayPoint
@@ -195,7 +204,10 @@ void WaypointExecutive::SOCIntCallback(
 {
   isSOCINT = msg->data;
 }
-
+void WaypointExecutive::PositionCallback(const std_msgs::msg::Float32MultiArray::SharedPtr msg)
+{
+  CurrentPositionPtr = std::make_unique<Position>(msg->data[0], msg->data[1], msg->data[2], msg->data[3], msg->data[4], msg->data[5]);
+}
 void WaypointExecutive::ManipulationStep(int code)
 {
   // Send Manipulation Code over Publisher.
@@ -210,17 +222,30 @@ bool WaypointExecutive::MetPositionandTimeReq()
   // check position var (include tolerance) with CurrentWaypointPtr
   // if position not met -> if(optional) CurrentStep.StopTimer(); //Missed after
   // reaching it. then return false; else if position met {
-  if (CurrentStep.HoldWaypTime_TimeElapsed.has_value())
+  if (CurrentWaypointPtr && CurrentPositionPtr)
   {
-    if (!CurrentStep.isTimerOn)
+    if (CurrentWaypointPtr->compare(CurrentPositionPtr))
     {
-      CurrentStep.StartTimer();
-      std::cout << CurrentStep.HoldWaypTime_TimeElapsed.value().first <<std::endl;
+      if (CurrentStep.HoldWaypTime_TimeElapsed.has_value())
+      {
+        if (!CurrentStep.isTimerOn)
+        {
+          CurrentStep.StartTimer();
+          std::cout << CurrentStep.HoldWaypTime_TimeElapsed.value().first << std::endl;
+        }
+      }
     }
+    else
+    {
+      CurrentStep.StopTimer();
+      return false;
+    }
+  }else{
+    return false;
   }
   //}
 
-  // Time Req
+  // Time Req after pos met.
   if (CurrentStep.HoldWaypTime_TimeElapsed.has_value())
   {
     CurrentStep.CalcTimer();
