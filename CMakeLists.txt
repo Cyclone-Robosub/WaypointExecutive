@@ -10,24 +10,26 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(crs_ros2_interfaces REQUIRED)
+
 # Add include directories
 include_directories(src)
-include_directories(JSON_Parser)
+include_directories(src/JSON_Parser)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(waypoint_executive
   src/mainWaypoint.cpp
   src/WaypointExecutive.cpp
   src/Task.cpp
   JSON_Parser/MissionAnalyser.cpp
-  ../crs_common/position/position.cpp
+  crs_common/position/position.cpp
 )
 
 ament_target_dependencies(waypoint_executive
   rclcpp
   std_msgs
   geometry_msgs
-  crs_ros2_interfaces
 )
 
 install(TARGETS

@@ -8,7 +8,12 @@ void Step::StartTimer() {
 }
 
 ///@brief O(1) Algo and no conditional waiting.
-void Step::StopTimer() { isTimerOn = false; }
+void Step::StopTimer() { 
+  auto deltaTime = std::chrono::duration<double>(
+                       std::chrono::steady_clock::now() - timeInital)
+                       .count();
+  HoldWaypTime_TimeElapsed.emplace(std::make_pair(HoldWaypTime_TimeElapsed.value().first, HoldWaypTime_TimeElapsed.value().second + deltaTime));
+  isTimerOn = false; }
 ///@brief O(1) Algo and no conditional waiting. Add time to the Elapsed Time of
 /// Current Step.
 void Step::CalcTimer() {

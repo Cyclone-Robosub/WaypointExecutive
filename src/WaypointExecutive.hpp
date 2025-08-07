@@ -1,4 +1,4 @@
-#include "MissionAnalyser.hpp"
+#include "../JSON_Parser/MissionAnalyser.hpp"
 #include "Task.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/bool.hpp"
@@ -7,7 +7,7 @@
 #include "std_msgs/msg/int64.hpp"
 #include "std_msgs/msg/string.hpp"
 #include <cstddef>
-#include "../../crs_common/position/position.hpp"
+#include "../crs_common/position/position.hpp"
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -57,9 +57,10 @@ struct Interrupts {
 class WaypointExecutive : public rclcpp::Node {
 public:
   WaypointExecutive()
-      : MissionQueue("../../WaypointDecision/JSON_Parser/MissionPath.JSON"),
+      : MissionQueue("../../JSON_Parser/MissionPath.JSON"),
         Node("WaypointExecutiveNode") {
     SetupROS();
+    CurrentPositionPtr = std::make_shared<Position>();
   }
 int Controller();
 private:
@@ -73,6 +74,7 @@ private:
   void ServiceINTofStep();
   // publisher of CurrentWaypointPtr topic.
   std::optional<bool> isSOCINT;
+  std::shared_ptr<Position> CurrentPositionPtr;
   waypointPtr CurrentWaypointPtr;
   Task CurrentTask;
   Step CurrentStep;
@@ -83,13 +85,16 @@ private:
 
   // callback ROS2 functions
   rclcpp::CallbackGroup::SharedPtr callbackINT;
+  rclcpp::CallbackGroup::SharedPtr callbackPosition;
   rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr
       WaypointPublisher;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr CurrentTaskPub;
   rclcpp::Publisher<std_msgs::msg::Int64>::SharedPtr Manipulation_Publisher;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr VisionSub;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr SOCINTSub;
+  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr PositionSub;
   void SOCIntCallback(const std_msgs::msg::Bool::SharedPtr msg);
+  void PositionCallback(const std_msgs::msg::Float32MultiArray::SharedPtr msg);
   // Make This Pair or Class to save the interrupt details.
   bool StopWorking{false};
   MissionAnalyser MissionQueue;

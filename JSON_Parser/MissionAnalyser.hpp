@@ -1,8 +1,9 @@
 #ifndef MISSION_ANALYSER_HPP
 #define MISSION_ANALYSER_HPP
 
-#include "../../crs_common/position/position.hpp"
-#include "../../Json/json.hpp"
+
+#include "../crs_common/position/position.hpp"
+#include "../lib/JSON/Json.hpp"
 #include "../src/Task.hpp"
 #include <queue>
 #include <string>
