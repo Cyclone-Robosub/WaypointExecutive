@@ -1,0 +1,80 @@
+{
+  "tasks": [
+    {"Startup": [
+        {"wait":50},
+        {"set_control_mode": "waypoint"},
+        {"wait":3}
+    ]},
+    {"Gate": [
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"barrel_roll": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 2
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }}
+    ]},
+    {"Dropper": [
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"set_control_mode": "vision"},
+        {"set_control_mode": "waypoint"}
+    ]},
+    {"Octagon":[
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 5
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }}
+    ]},
+    {"Return_To_Gate": [
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"barrel_roll": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 2
+        }},
+        {"waypoint": {
+            "position": [0,0,0,0,0,0],
+            "hold_time": 0
+        }},
+        {"control_signal": "STOP"}
+    ]}
+  ]
+}

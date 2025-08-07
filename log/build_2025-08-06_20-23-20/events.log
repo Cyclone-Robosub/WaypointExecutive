@@ -1,0 +1,75 @@
+[0.000000] (-) TimerEvent: {}
+[0.000473] (waypoint_executive) JobQueued: {'identifier': 'waypoint_executive', 'dependencies': OrderedDict()}
+[0.000524] (waypoint_executive) JobStarted: {'identifier': 'waypoint_executive'}
+[0.005762] (waypoint_executive) JobProgress: {'identifier': 'waypoint_executive', 'progress': 'cmake'}
+[0.006145] (waypoint_executive) Command: {'cmd': ['/usr/bin/cmake', '/home/zenyn/WaypointExecutive', '-DCMAKE_INSTALL_PREFIX=/home/zenyn/WaypointExecutive/install/waypoint_executive'], 'cwd': '/home/zenyn/WaypointExecutive/build/waypoint_executive', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'LANGUAGE': 'en_US', 'USER': 'zenyn', 'XDG_SEAT': 'seat0', 'XDG_SESSION_TYPE': 'x11', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/zenyn', 'OLDPWD': '/home/zenyn/WaypointExecutive', 'DESKTOP_SESSION': 'cinnamon', 'ROS_PYTHON_VERSION': '3', 'GTK_MODULES': 'gail:atk-bridge', 'XDG_SEAT_PATH': '/org/freedesktop/DisplayManager/Seat0', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'INSIDE_NEMO_PYTHON': '', 'COLCON_PREFIX_PATH': '/home/zenyn/StateSaver/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'zenyn', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'TERM': 'xterm-256color', 'XDG_SESSION_ID': 'c2', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/bin:/home/zenyn/.local/bin:/home/zenyn/.local/bin:/home/zenyn/.local/bin:/home/zenyn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'SESSION_MANAGER': 'local/Zenyn-Linux:@/tmp/.ICE-unix/2488,unix/Zenyn-Linux:/tmp/.ICE-unix/2488', 'GDM_LANG': 'en_US', 'GTK3_MODULES': 'xapp-gtk3-module', 'XDG_SESSION_PATH': '/org/freedesktop/DisplayManager/Session0', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/dacd5669_1c95_4fe1_b0e4_dc48c6062c5d', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'X-Cinnamon', 'XDG_SESSION_DESKTOP': 'cinnamon', 'XAUTHORITY': '/home/zenyn/.Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.71', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'XDG_GREETER_DATA_DIR': '/var/lib/lightdm-data/zenyn', 'AMENT_PREFIX_PATH': '/home/zenyn/StateSaver/install/state_saver:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'cinnamon', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'XDG_VTNR': '7', 'PWD': '/home/zenyn/WaypointExecutive/build/waypoint_executive', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-cinnamon:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/cinnamon:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/zenyn/StateSaver/install/state_saver:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy'}), 'shell': False}
+[0.097234] (waypoint_executive) StdoutLine: {'line': b'-- The C compiler identification is GNU 13.3.0\n'}
+[0.099718] (-) TimerEvent: {}
+[0.166129] (waypoint_executive) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 13.3.0\n'}
+[0.186746] (waypoint_executive) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.199877] (-) TimerEvent: {}
+[0.298646] (waypoint_executive) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.299997] (-) TimerEvent: {}
+[0.311993] (waypoint_executive) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.312638] (waypoint_executive) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.313429] (waypoint_executive) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.328269] (waypoint_executive) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.400171] (-) TimerEvent: {}
+[0.457240] (waypoint_executive) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.463825] (waypoint_executive) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.464121] (waypoint_executive) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.464279] (waypoint_executive) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.467280] (waypoint_executive) StdoutLine: {'line': b'-- Found ament_cmake: 2.5.3 (/opt/ros/jazzy/share/ament_cmake/cmake)\n'}
+[0.500330] (-) TimerEvent: {}
+[0.600672] (-) TimerEvent: {}
+[0.605115] (waypoint_executive) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter \n'}
+[0.691557] (waypoint_executive) StdoutLine: {'line': b'-- Found rclcpp: 28.1.8 (/opt/ros/jazzy/share/rclcpp/cmake)\n'}
+[0.700870] (-) TimerEvent: {}
+[0.720931] (waypoint_executive) StdoutLine: {'line': b'-- Found rosidl_generator_c: 4.6.5 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)\n'}
+[0.729321] (waypoint_executive) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 4.6.5 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)\n'}
+[0.739601] (waypoint_executive) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.751479] (waypoint_executive) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.801095] (-) TimerEvent: {}
+[0.802846] (waypoint_executive) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 7.3.2 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)\n'}
+[0.804574] (waypoint_executive) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 8.4.2 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)\n'}
+[0.892274] (waypoint_executive) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  \n'}
+[0.901330] (-) TimerEvent: {}
+[0.914057] (waypoint_executive) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") \n'}
+[0.944714] (waypoint_executive) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[1.001573] (-) TimerEvent: {}
+[1.003822] (waypoint_executive) StdoutLine: {'line': b'-- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)\n'}
+[1.014622] (waypoint_executive) StdoutLine: {'line': b'-- Found geometry_msgs: 5.3.6 (/opt/ros/jazzy/share/geometry_msgs/cmake)\n'}
+[1.028263] (waypoint_executive) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.17.2 (/opt/ros/jazzy/share/ament_lint_auto/cmake)\n'}
+[1.101796] (-) TimerEvent: {}
+[1.110927] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'copyright' to check source files copyright and LICENSE\n"}
+[1.114689] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[1.115040] (waypoint_executive) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/zenyn/WaypointExecutive/src;/home/zenyn/WaypointExecutive/src/JSON_Parser\n'}
+[1.115159] (waypoint_executive) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[1.118133] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'cpplint' to check C / C++ code against the Google style\n"}
+[1.118442] (waypoint_executive) StdoutLine: {'line': b'-- Configured cpplint exclude dirs and/or files: \n'}
+[1.119055] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'flake8' to check Python code syntax and style conventions\n"}
+[1.119158] (waypoint_executive) StdoutLine: {'line': b"-- Configured 'flake8' exclude dirs and/or files: \n"}
+[1.120336] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[1.122011] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257\n"}
+[1.129752] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'uncrustify' to check C / C++ code style\n"}
+[1.129842] (waypoint_executive) StdoutLine: {'line': b'-- Configured uncrustify additional arguments: \n'}
+[1.131323] (waypoint_executive) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[1.133137] (waypoint_executive) StdoutLine: {'line': b'-- Configuring done (1.1s)\n'}
+[1.137110] (waypoint_executive) StderrLine: {'line': b'\x1b[31mCMake Error at CMakeLists.txt:18 (add_executable):\n'}
+[1.137286] (waypoint_executive) StderrLine: {'line': b'  Cannot find source file:\n'}
+[1.137367] (waypoint_executive) StderrLine: {'line': b'\n'}
+[1.137434] (waypoint_executive) StderrLine: {'line': b'    src/JSON_Parser/MissionAnalyser.cpp\n'}
+[1.137499] (waypoint_executive) StderrLine: {'line': b'\n'}
+[1.137562] (waypoint_executive) StderrLine: {'line': b'  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm\n'}
+[1.137625] (waypoint_executive) StderrLine: {'line': b'  .ccm .cxxm .c++m .h .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90\n'}
+[1.137681] (waypoint_executive) StderrLine: {'line': b'  .f95 .f03 .hip .ispc\n'}
+[1.137739] (waypoint_executive) StderrLine: {'line': b'\n'}
+[1.137798] (waypoint_executive) StderrLine: {'line': b'\x1b[0m\n'}
+[1.140440] (waypoint_executive) StderrLine: {'line': b'\x1b[31mCMake Error at CMakeLists.txt:18 (add_executable):\n'}
+[1.140567] (waypoint_executive) StderrLine: {'line': b'  No SOURCES given to target: waypoint_executive\n'}
+[1.140628] (waypoint_executive) StderrLine: {'line': b'\n'}
+[1.140681] (waypoint_executive) StderrLine: {'line': b'\x1b[0m\n'}
+[1.140736] (waypoint_executive) StderrLine: {'line': b'\x1b[0mCMake Generate step failed.  Build files cannot be regenerated correctly.\x1b[0m\n'}
+[1.149576] (waypoint_executive) CommandEnded: {'returncode': 1}
+[1.168339] (waypoint_executive) JobEnded: {'identifier': 'waypoint_executive', 'rc': 1}
+[1.169264] (-) EventReactorShutdown: {}

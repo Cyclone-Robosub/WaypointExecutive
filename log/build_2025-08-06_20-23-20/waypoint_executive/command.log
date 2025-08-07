@@ -1,0 +1,2 @@
+Invoking command in '/home/zenyn/WaypointExecutive/build/waypoint_executive': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake /home/zenyn/WaypointExecutive -DCMAKE_INSTALL_PREFIX=/home/zenyn/WaypointExecutive/install/waypoint_executive
+Invoked command in '/home/zenyn/WaypointExecutive/build/waypoint_executive' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake /home/zenyn/WaypointExecutive -DCMAKE_INSTALL_PREFIX=/home/zenyn/WaypointExecutive/install/waypoint_executive
