@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <filesystem>
 #include <optional>
 #include <queue>
 #include <utility>
@@ -51,14 +52,16 @@ struct Interrupts {
   bool SOCDANGER{false};
   bool BINS_SPOTTED{false};
   bool DROP_INTO_BINS{false}; // READY_TO_DROP_INTO_BINS
+  bool REEF_SHARK{false};
   bool TriggerManipSendCode{false};
 };
 
 class WaypointExecutive : public rclcpp::Node {
 public:
   WaypointExecutive()
-      : MissionQueue("../../JSON_Parser/MissionPath.JSON"),
-        Node("WaypointExecutiveNode") {
+      : Node("WaypointExecutiveNode") {
+    std::filesystem::path new_directory = "JSON_Parser/MissionPath.JSON";
+    MissionQueue = MissionAnalyser(std::filesystem::current_path().parent_path() / new_directory );
     SetupROS();
     CurrentPositionPtr = std::make_shared<Position>();
   }
@@ -74,6 +77,9 @@ private:
   void ServiceINTofStep();
   // publisher of CurrentWaypointPtr topic.
   std::optional<bool> isSOCINT;
+  std::vector<std::string> Last_Detected_Objects_Vector;
+  std::mutex VisionVectorMutex;
+  bool DidWeSeeObject(std::string key);
   std::shared_ptr<Position> CurrentPositionPtr;
   waypointPtr CurrentWaypointPtr;
   Task CurrentTask;
@@ -93,6 +99,7 @@ private:
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr VisionSub;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr SOCINTSub;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr PositionSub;
+  void VisionDetector(const std_msgs::msg::String::SharedPtr msg);
   void SOCIntCallback(const std_msgs::msg::Bool::SharedPtr msg);
   void PositionCallback(const std_msgs::msg::Float32MultiArray::SharedPtr msg);
   // Make This Pair or Class to save the interrupt details.

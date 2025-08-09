@@ -1,7 +1,7 @@
 {
   "tasks": [
     {"Startup": [
-        {"wait":50},
+     
         {"set_control_mode": "waypoint"},
         {"wait":3}
     ]},

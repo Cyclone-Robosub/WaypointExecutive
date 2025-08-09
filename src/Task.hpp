@@ -14,7 +14,7 @@ typedef std::shared_ptr<Position> waypointPtr;
 
 struct Step {
   waypointPtr WaypointPointer;
-  std::optional<std::string> VisionCommand;
+  std::optional<std::string> VisionINTCommand;
   bool isInterruptable{false}; // Think About Hard vs Soft INT
   bool doBarrelRoll{false};    // Will also need to be more robust
   bool stopWorking{false};

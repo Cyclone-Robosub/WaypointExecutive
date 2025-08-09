@@ -7,11 +7,14 @@
 #include "../src/Task.hpp"
 #include <queue>
 #include <string>
+#include <filesystem>
 
 struct Task;
 class MissionAnalyser {
 public:
+  MissionAnalyser();
   MissionAnalyser(std::string filePath);
+  MissionAnalyser(std::filesystem::path filePath);
   void parseJSONForMission();
   Task popNextTask();
   bool allTasksComplete();
