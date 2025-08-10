@@ -15,7 +15,7 @@
     Its only output is a desired waypoint at the current time.
 ## What is a task and a step?
     A task is a major action, expectation, or obstcale that the robot should do such as attempting to find and pass through the gate.
-    A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act, and/or a manipulation object that the robot needs to execute. 
+    A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act, or a manipulation object that the robot needs to execute. 
 ## How is a step deemed completed?
     If the robot goes to the waypoint and either holds or touches it as instructed.
         OR
@@ -23,11 +23,13 @@
         OR
     If the robot needs to hold its position(was never given a waypoint) for a time period.
         OR
-    If it saw the required vision object.
+    If it saw the required vision object and executed an action from it.
         OR
     If it executed the requried manipulation task.
     
     If none of these conditions passes, it has not been deemed completed.
+
+    If any one of these conditions passes, the controller moves on.
 ## What are the changes of states that the robot can experience?
     The battery being too low to continue.
     The Robot saw an object it needed to see.

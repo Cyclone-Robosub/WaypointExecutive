@@ -15,6 +15,7 @@
     {"Dropper": [
         {"waypoint": {
             "position": [0,0,0,0,0,0],
+            "max_time": 9,
             "hold_time": 0
         }},
         {"waypoint": {
