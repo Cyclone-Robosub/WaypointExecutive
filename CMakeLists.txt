@@ -7,6 +7,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_gtest REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -57,7 +58,7 @@ ament_add_gtest(waypoint_test
   JSON_Parser/MissionAnalyser.cpp
   crs_common/position/position.cpp
   )
-ament_target_dependencies(battery_management_test
+ament_target_dependencies(waypoint_test
     rclcpp
     std_msgs
   geometry_msgs
