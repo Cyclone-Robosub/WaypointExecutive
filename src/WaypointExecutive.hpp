@@ -63,7 +63,7 @@ public:
   WaypointExecutive()
       : Node("WaypointExecutiveNode") {
     std::filesystem::path new_directory = "JSON_Parser/MissionPath.JSON";
-    MissionQueue = MissionAnalyser(std::filesystem::current_path().parent_path() / new_directory );
+    MissionQueue = MissionAnalyser(std::filesystem::current_path().parent_path().parent_path() / new_directory );
     SetupROS();
     CurrentPositionPtr = std::make_shared<Position>();
   }

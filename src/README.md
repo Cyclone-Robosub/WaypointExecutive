@@ -28,7 +28,7 @@
     If it executed the requried manipulation task.
     
     If none of these conditions passes, it has not been deemed completed.
-# What are the changes of states that the robot can experience?
+## What are the changes of states that the robot can experience?
     The battery being too low to continue.
     The Robot saw an object it needed to see.
     The Robot experienced a condition that needed to execute a manipulation step.
