@@ -1,4 +1,4 @@
-# How does WaypointExecutive work?
+## How does WaypointExecutive work?
     WaypointExecutive is a single threaded loop that completes these steps in order.
         1. Interpert the Mission File
         2. Get a new mission task
@@ -13,10 +13,10 @@
         11. Success
     Its main inputs are a Mission Path file, position, vision, and battery interrupts.
     Its only output is a desired waypoint at the current time.
-# What is a task and a step?
+## What is a task and a step?
     A task is a major action, expectation, or obstcale that the robot should do such as attempting to find and pass through the gate.
     A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act, and/or a manipulation object that the robot needs to execute. 
-# How is a step deemed completed?
+## How is a step deemed completed?
     If the robot goes to the waypoint and either holds or touches it as instructed.
         OR
     If the robot has reached the max time of trying to complete the step.
@@ -32,7 +32,7 @@
     The battery being too low to continue.
     The Robot saw an object it needed to see.
     The Robot experienced a condition that needed to execute a manipulation step.
-# How does the robot adapt or service these changes of state?
+## How does the robot adapt or service these changes of state?
     If the battery is too low -> Surface, Make a Report, and Stop Operating.
     If the Robot saw an object -> Execute actions that has already been cleared by pre-existing conditions, requirments, and commands.
     If the robot needs to trigger the manipulation code. -> Send the command through ROS.
