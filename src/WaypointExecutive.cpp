@@ -79,25 +79,29 @@ void WaypointExecutive::SendCurrentWaypoint() {
   }
   // start the timer
 }
-///@brief O(1) and no conditional waiting. Returns True if the task should still
-/// run.
+///@brief O(1) and no conditional waiting. Returns False if the task should
+/// still run.
 bool WaypointExecutive::isCurrentStepCompleted() {
-  if (!MetPositionandTimeReq()) {
-    return false;
+  if (MetPositionandTimeReq()) {
+    return true;
   }
 
   // use the vision condition option to check if done?
-
+  if (CurrentStep.VisionINTCommand_Serviced.has_value()) {
+    if (CurrentStep.VisionINTCommand_Serviced.value().second) {
+      return true;
+    }
+  }
   if (CurrentStep.ManipulationCodeandStatus.has_value()) {
     if (!CurrentStep.ManipulationCodeandStatus.value().second) {
-      return false;
+      return true;
     }
   }
   // else
-  return true;
+  return false;
 }
 ///@brief Worst Case : O(How many objects were seen during the step). Pushes INT
-///instance to the
+/// instance to the
 /// queue of Current Queue.
 void WaypointExecutive::CheckINTofStep() {
   Interrupts generateINT;
@@ -105,8 +109,14 @@ void WaypointExecutive::CheckINTofStep() {
   bool didInterruptHappen = false;
   // check vision if needed -> Manipulation Tasks can be coded apart and along
   // side this vision requriment along with position and altitude.
-  if (CurrentStep.VisionINTCommand.has_value()) {
-    const auto cmd = CurrentStep.VisionINTCommand.value();
+  // check battery
+  if (isSOCINT.has_value()) {
+    isSOCINT.reset();
+    generateINT.SOCDANGER = true;
+    didInterruptHappen = true;
+  }
+  if (CurrentStep.VisionINTCommand_Serviced.has_value()) {
+    const auto cmd = CurrentStep.VisionINTCommand_Serviced.value().first;
     if (cmd == "GATE") {
       if (DidWeSeeObject("Reef Shark")) {
         generateINT.REEF_SHARK = true;
@@ -127,16 +137,11 @@ void WaypointExecutive::CheckINTofStep() {
     }
   }
   // listen to the vision topic;
+  /*
   if (CurrentStep.ManipulationCodeandStatus.has_value()) {
     generateINT.TriggerManipSendCode = true;
     didInterruptHappen = true;
-  }
-  // check battery
-  if (isSOCINT.has_value()) {
-    isSOCINT.reset();
-    generateINT.SOCDANGER = true;
-    didInterruptHappen = true;
-  }
+  }*/
   if (didInterruptHappen) {
     Current_Interrupts.push(generateINT);
   }
@@ -165,6 +170,11 @@ void WaypointExecutive::ServiceINTofStep() {
     SendCurrentWaypoint();
     EndReport(ServiceINT);
   }
+  if(ServiceINT.RanOutofTimeStep){
+    EndReport(ServiceINT);
+  }
+  if (ServiceINT.REEF_SHARK) {
+  }
   if (ServiceINT.BINS_SPOTTED) {
     // Get Waypoint or coordinate from Vision.
     SendCurrentWaypoint();
@@ -189,12 +199,15 @@ void WaypointExecutive::getNewMissionTask() {
 void WaypointExecutive::getNewMissionStep() {
   // fetch or predetermined waypoints.
   // Predetermined -> Waypoint Objects?
-  Last_Detected_Objects_Vector.clear();
+  if (!Last_Detected_Objects_Vector.empty()) {
+    Last_Detected_Objects_Vector.clear();
+  }
   CurrentStep = CurrentTask.steps_queue.front();
   CurrentTask.steps_queue.pop();
   if (CurrentStep.WaypointPointer != nullptr) {
     CurrentWaypointPtr = CurrentStep.WaypointPointer;
   }
+  timeInitalStep = std::chrono::steady_clock::now();
   std::cout << "new mission step " << std::endl;
 }
 
@@ -222,6 +235,7 @@ void WaypointExecutive::VisionDetector(
 }
 void WaypointExecutive::PositionCallback(
     const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
+  // make this more efficent.
   CurrentPositionPtr =
       std::make_shared<Position>(msg->data[0], msg->data[1], msg->data[2],
                                  msg->data[3], msg->data[4], msg->data[5]);
@@ -242,22 +256,24 @@ bool WaypointExecutive::MetPositionandTimeReq() {
       // Check to see if we need to start the timer. (Don't check for time req
       // yet.)
       if (CurrentStep.HoldWaypTime_TimeElapsed.has_value()) {
-        if (!CurrentStep.isTimerOn) {
           CurrentStep.StartTimer();
-          std::cout << CurrentStep.HoldWaypTime_TimeElapsed.value().first
-                    << std::endl;
-        }
       }
     }
-    // We ran off course.
+    // We ran off course or never reached it.
     else {
       CurrentStep.StopTimer();
+       auto deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
+                    std::chrono::steady_clock::now() - timeInitalStep
+                 ).count();
+      if(deltaTime >= CurrentStep.MaxTime){
+        return true;
+      }
       return false;
     }
   }
-  // We don't have something for all the data we need. Or we just need to wait at our current position.
-  else {
-    if(CurrentWaypointPtr == nullptr){
+  // We don't have something for all the data we need. Or we just need to wait
+  // at our current position.
+  else if (CurrentWaypointPtr == nullptr) {
     if (CurrentStep.HoldWaypTime_TimeElapsed.has_value()) {
       if (!CurrentStep.isTimerOn) {
         CurrentStep.StartTimer();
@@ -265,11 +281,11 @@ bool WaypointExecutive::MetPositionandTimeReq() {
                   << std::endl;
       }
     } else {
-      //The Robot has not started the current position.
+      // The Robot has not started the current position topic.
       return false;
     }
-    }
   }
+
   //}
 
   // Time Req after pos met or doesn't need to be met.
@@ -282,6 +298,7 @@ bool WaypointExecutive::MetPositionandTimeReq() {
       CurrentStep.StopTimer();
     }
   }
+
   std::cout << "met TIME and pos" << std::endl;
   return true;
 }
@@ -289,16 +306,20 @@ bool WaypointExecutive::MetPositionandTimeReq() {
 /// @brief: Will Exit itself after creating Report
 void WaypointExecutive::EndReport(Interrupts interrupt) {
   std::ofstream ReportFile;
-  ReportFile.open("../../End_Report.txt");
+  ReportFile.open("../../End_Report.txt", std::ios::app);
   ReportFile << "___________START OF REPORT__________" << std::endl;
   ReportFile << "Reason for Report : ";
   if (MissionQueue.allTasksComplete()) {
     ReportFile << "All Tasks are Completed." << std::endl;
+    StopWorking = true;
   }
   if (interrupt.SOCDANGER) {
     ReportFile << "State of Charge was low. Check Logs of SOC" << std::endl;
+    StopWorking = true;
+  }
+  if(interrupt.RanOutofTimeStep){
+    ReportFile << "A step was skipped due to running out of time" << std::endl;
   }
   ReportFile << "___________END OF REPORT ___________" << std::endl;
   ReportFile.close();
-  StopWorking = true;
 }

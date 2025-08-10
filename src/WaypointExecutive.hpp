@@ -51,9 +51,11 @@ and Manipulation should solve this implementation problem.
 struct Interrupts {
   bool SOCDANGER{false};
   bool BINS_SPOTTED{false};
+  bool GATE_SPOTTED{true};
   bool DROP_INTO_BINS{false}; // READY_TO_DROP_INTO_BINS
   bool REEF_SHARK{false};
   bool TriggerManipSendCode{false};
+  bool RanOutofTimeStep{false};
 };
 
 class WaypointExecutive : public rclcpp::Node {
@@ -75,6 +77,7 @@ private:
   void ManipulationStep(int code);
   void CheckINTofStep();
   void ServiceINTofStep();
+  std::chrono::steady_clock::time_point timeInitalStep;
   // publisher of CurrentWaypointPtr topic.
   std::optional<bool> isSOCINT;
   std::vector<std::string> Last_Detected_Objects_Vector;

@@ -14,15 +14,15 @@ typedef std::shared_ptr<Position> waypointPtr;
 
 struct Step {
   waypointPtr WaypointPointer;
-  std::optional<std::string> VisionINTCommand;
-  bool isInterruptable{false}; // Think About Hard vs Soft INT
+  std::optional<std::pair<std::string, bool>> VisionINTCommand_Serviced;
+  bool isInterruptable{true}; // Think About Hard vs Soft INT
   bool doBarrelRoll{false};    // Will also need to be more robust
   bool stopWorking{false};
   std::optional<std::pair<int, bool>> ManipulationCodeandStatus;
 
   // Make sure that the second of the pair when initalized is set to 0.
   std::optional<std::pair<double, double>> HoldWaypTime_TimeElapsed;
-
+  unsigned int MaxTime;
   // const static Waypoints pre-determined of vector?
 
   void StartTimer();

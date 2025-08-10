@@ -46,7 +46,7 @@ void MissionAnalyser::parseJSONForMission() {
                 else if (stepJson.contains("set_control_mode")) { // not sure if this should be handled seperately. What does changing control mode involve?
                     std::string mode = stepJson["set_control_mode"].get<std::string>();
                     if (mode == "vision") {
-                        step.VisionINTCommand= "DROP_INTO_BINS";
+                        step.VisionINTCommand_Serviced = std::make_pair("DROP_INTO_BINS", false);
                     }
                 }
                 else if (stepJson.contains("waypoint")) {
