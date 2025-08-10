@@ -49,9 +49,18 @@ install(DIRECTORY
   OPTIONAL
 )
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
-endif()
+ament_add_gtest(waypoint_test
+    test/test_waypoint.cpp
+    src/mainWaypoint.cpp
+  src/WaypointExecutive.cpp
+  src/Task.cpp
+  JSON_Parser/MissionAnalyser.cpp
+  crs_common/position/position.cpp
+  )
+ament_target_dependencies(battery_management_test
+    rclcpp
+    std_msgs
+  geometry_msgs
+  )
 
 ament_package()
