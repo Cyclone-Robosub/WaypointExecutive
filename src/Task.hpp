@@ -22,7 +22,7 @@ struct Step {
 
   // Make sure that the second of the pair when initalized is set to 0.
   std::optional<std::pair<double, double>> HoldWaypTime_TimeElapsed;
-  unsigned int MaxTime;
+  unsigned int MaxTime =5;
   // const static Waypoints pre-determined of vector?
 
   void StartTimer();

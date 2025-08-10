@@ -1,9 +1,11 @@
 #include "WaypointExecutive.hpp"
-#include "../lib/JSON/Json.hpp"
+
 #include <chrono>
 #include <fstream>
 #include <memory>
 #include <regex>
+
+#include "../lib/JSON/Json.hpp"
 
 using json = nlohmann::json;
 
@@ -225,12 +227,13 @@ void WaypointExecutive::VisionDetector(
     for (const auto &item : parsed) {
       if (item.contains("class_name") && item["class_name"].is_string()) {
         std::lock_guard<std::mutex> lock(VisionVectorMutex);
-        Last_Detected_Objects_Vector.push_back(item["class_name"].get<std::string>());
+        Last_Detected_Objects_Vector.push_back(
+            item["class_name"].get<std::string>());
       }
     }
 
   } catch (const json::parse_error &e) {
-    std::cerr << "could not parse vision data." << std:endl;
+    std::cerr << "could not parse vision data." << std::endl;
   }
 }
 void WaypointExecutive::PositionCallback(
@@ -262,7 +265,7 @@ bool WaypointExecutive::MetPositionandTimeReq() {
     // We ran off course or never reached it.
     else {
       CurrentStep.StopTimer();
-      auto deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
+      unsigned int deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
                            std::chrono::steady_clock::now() - timeInitalStep)
                            .count();
       if (deltaTime >= CurrentStep.MaxTime) {
@@ -281,9 +284,17 @@ bool WaypointExecutive::MetPositionandTimeReq() {
                   << std::endl;
       }
     } else {
-      // The Robot has not started the current position topic.
+      unsigned int deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
+                           std::chrono::steady_clock::now() - timeInitalStep)
+                           .count();
+      if (deltaTime >= CurrentStep.MaxTime) {
+        return true;
+      }
       return false;
     }
+  } else {
+    // The Robot has not started the current position topic.
+    return false;
   }
 
   //}

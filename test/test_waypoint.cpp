@@ -1,162 +1,134 @@
-#include "BatteryMonitor.hpp"
 #include <gtest/gtest.h>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/bool.hpp>
-#include <std_msgs/msg/float64.hpp>
-// Initial design by AI
+#include <std_msgs/msg/float32_multi_array.hpp>
+#include <std_msgs/msg/string.hpp>
+#include <thread>
+#include <chrono>
 
-class BatteryMonitorTest : public ::testing::Test
+#include "WaypointExecutive.hpp"
+
+class WaypointExecutiveTest : public ::testing::Test
 {
 protected:
   void SetUp() override
   {
     rclcpp::init(0, nullptr);
     temp_node_ = rclcpp::Node::make_shared("test_node");
-    Batteryinstance = std::make_shared<BatteryMonitor>();
-    // StartupThread.detach();
-    // Setup test publishers
-    volt_pub = temp_node_->create_publisher<std_msgs::msg::Float64>("voltageReadingTopic", 10);
-    current_pub =
-        temp_node_->create_publisher<std_msgs::msg::Float64>("currentReadingTopic", 10);
+    exec_instance = std::make_shared<WaypointExecutive>();
 
-    // Setup test subscriptions
-    soc_sub = temp_node_->create_subscription<std_msgs::msg::Float64>(
-        "SOCTopic", 10, [this](std_msgs::msg::Float64::SharedPtr msg)
+    // Publishers to send fake data into the executive
+    soc_pub = temp_node_->create_publisher<std_msgs::msg::Bool>("SOCIntTopic", 10);
+    pos_pub = temp_node_->create_publisher<std_msgs::msg::Float32MultiArray>("position_topic", 10);
+    vision_pub = temp_node_->create_publisher<std_msgs::msg::String>("detections", 10);
+
+    // Subscribers to monitor executive outputs
+    waypoint_sub = temp_node_->create_subscription<std_msgs::msg::Float32MultiArray>(
+        "waypoint_topic", 10,
+        [this](std_msgs::msg::Float32MultiArray::SharedPtr msg)
         {
-          last_soc = msg->data;
-          soc_received = true; });
+          last_waypoint = *msg;
+          waypoint_received = true;
+        });
 
-    socint_sub = temp_node_->create_subscription<std_msgs::msg::Bool>(
-        "SOCIntTopic", 10, [this](std_msgs::msg::Bool::SharedPtr msg)
+    current_task_sub = temp_node_->create_subscription<std_msgs::msg::String>(
+        "CurrentTaskTopic", 10,
+        [this](std_msgs::msg::String::SharedPtr msg)
         {
-          socint_triggered = msg->data;
-          socint_received = true; });
+          last_task_name = msg->data;
+          task_received = true;
+        });
 
-    soc_received = false;
-    socint_received = false;
+    manip_sub = temp_node_->create_subscription<std_msgs::msg::Int64>(
+        "manipulationCommand", 10,
+        [this](std_msgs::msg::Int64::SharedPtr msg)
+        {
+          last_manip_code = msg->data;
+          manip_received = true;
+        });
+ // ===== Continuous position publisher thread =====
+    position_pub_thread = std::jthread([this]()
+    {
+      std_msgs::msg::Float32MultiArray pos_msg;
+      pos_msg.data = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+      while (!position_pub_thread.get_stop_token().stop_requested())
+      {
+        pos_pub->publish(pos_msg);
+        // Simulate some movement if you want
+        for (auto &val : pos_msg.data)
+          val += 0.1f;
+        rclcpp::sleep_for(std::chrono::milliseconds(100));
+      }
+    });
+  
+    // Start executor
+    executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
+    executor->add_node(temp_node_);
+    executor->add_node(exec_instance);
 
-    // Spin in a separate thread
-    //Battery = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-    exec = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-    exec->add_node(temp_node_);
-    exec->add_node(Batteryinstance);
-    //Battery->add_node(Batteryinstance);
-    //  exec->add_node(Batteryinstance);
     spin_thread = std::jthread([this]()
-                               { exec->spin(); });
-    //another_thread = std::jthread([this]()
-      //                            { Battery->spin(); });
-    Actual_Battery_SOC = std::jthread([this]()
-                                      { Batteryinstance->Startup(); });
-    //   spin_thread.detach();
-    // another_thread.detach();
+                               { executor->spin(); });
+
+    waypoint_received = false;
+    task_received = false;
+    manip_received = false;
   }
 
   void TearDown() override
-  { /*
-     while(!spin_thread.request_stop() ||
-     !another_thread.request_stop()){
-       std::cout << "still running\n";
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-     }*/
-    Batteryinstance->Shutdown();
+  {
+      position_pub_thread.request_stop();
+    exec_instance->EndReport(); // Ensure file writing done
     rclcpp::shutdown();
   }
 
-  std::shared_ptr<BatteryMonitor> Batteryinstance;
+  // Nodes & ROS objects
   rclcpp::Node::SharedPtr temp_node_;
-  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr volt_pub;
-  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr current_pub;
-  rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr soc_sub;
-  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr socint_sub;
-  std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> exec;
-  std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> Battery;
-  std::jthread spin_thread;
-  std::jthread another_thread;
-  std::jthread Actual_Battery_SOC;
+  std::shared_ptr<WaypointExecutive> exec_instance;
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr soc_pub;
+  rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr pos_pub;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr vision_pub;
 
-  double last_soc = 0.0;
-  bool soc_received = false;
-  bool socint_triggered = false;
-  bool socint_received = false;
+  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr waypoint_sub;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr current_task_sub;
+  rclcpp::Subscription<std_msgs::msg::Int64>::SharedPtr manip_sub;
+
+  std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor;
+  std::jthread spin_thread;
+  std::jthread position_pub_thread;
+  // Test state
+  std_msgs::msg::Float32MultiArray last_waypoint;
+  bool waypoint_received;
+  std::string last_task_name;
+  bool task_received;
+  int64_t last_manip_code;
+  bool manip_received;
 };
 
-TEST_F(BatteryMonitorTest, PublishesSOC)
+// ------------------------------------------------------------
+// TEST 1: Verify SOC interrupt stops mission
+// ------------------------------------------------------------
+TEST_F(WaypointExecutiveTest, HandlesSOCInterrupt)
 {
-  std_msgs::msg::Float64 volt_msg;
-  volt_msg.data = 16.7; // Simulate voltage reading
-  volt_pub->publish(volt_msg);
-
-  std_msgs::msg::Float64 current_msg;
-  current_msg.data = 15.0; // Simulate current draw
-  current_pub->publish(current_msg);
+  std_msgs::msg::Bool soc_msg;
+  soc_msg.data = true;
+  soc_pub->publish(soc_msg);
 
   rclcpp::sleep_for(std::chrono::milliseconds(200));
-  for (int i = 0; i < 10; ++i)
-  {
-    current_pub->publish(current_msg);
-    current_msg.data += 20;
-    rclcpp::sleep_for(std::chrono::milliseconds(100));
-  }
 
-  // Allow time for callback and timer to trigger
-  for (int i = 0; i < 10 && !soc_received; ++i)
-  {
-    rclcpp::sleep_for(std::chrono::milliseconds(100));
-  }
-  EXPECT_TRUE(soc_received);
-  //EXPECT_GT(last_soc, -1.0); // It should have calculated some SOC value
+  EXPECT_EQ(exec_instance->Controller(), 0);
+  
 }
 
-TEST_F(BatteryMonitorTest, TriggersSOCInterrupt)
+// ------------------------------------------------------------
+// TEST 2: Vision detection triggers REEF_SHARK interrupt
+// ------------------------------------------------------------
+TEST_F(WaypointExecutiveTest, DetectsReefShark)
 {
-  std_msgs::msg::Float64 volt_msg;
-  volt_msg.data = 14.005;
-  volt_pub->publish(volt_msg);
+  std_msgs::msg::String vision_msg;
+  vision_msg.data = R"([{"class_name":"Reef Shark"}])";
+  vision_pub->publish(vision_msg);
 
-  std_msgs::msg::Float64 current_msg;
-  current_msg.data = 10000.0; // Simulate huge discharge
-  current_pub->publish(current_msg);
-
-  // Let SOC drop fast enough to hit DANGERSOCLEVEL
-  rclcpp::sleep_for(std::chrono::seconds(1));
-
-  for (int i = 0; i < 10 && !socint_received; ++i)
-  {
-    rclcpp::sleep_for(std::chrono::milliseconds(100));
-  }
-
-  EXPECT_TRUE(socint_received);
-  EXPECT_TRUE(socint_triggered);
+  rclcpp::sleep_for(std::chrono::milliseconds(200));
+  EXPECT_EQ(exec_instance->Controller(), 1);
 }
 
-TEST_F(BatteryMonitorTest, ContinuousSOCPublishing)
-{
-  // Simulate 10 iterations of input to simulate runtime
-  std_msgs::msg::Float64 volt_msg;
-  std_msgs::msg::Float64 current_msg;
-
-  volt_msg.data = 15.0;    // Mid-level voltage
-  current_msg.data = 14.0; // Mild current draw
-  volt_pub->publish(volt_msg);
-  int messages_received = 0;
-
-  // Reset subscription to count multiple SOC messages
-  soc_sub = Batteryinstance->create_subscription<std_msgs::msg::Float64>(
-      "SOCTopic", 10,
-      [&messages_received](std_msgs::msg::Float64::SharedPtr msg)
-      {
-        RCLCPP_INFO(rclcpp::get_logger("TestLogger"), "SOC: %.2f", msg->data);
-        ++messages_received;
-      });
-
-  for (int i = 0; i < 10; ++i)
-  {
-    current_pub->publish(current_msg);
-    current_msg.data += 20;
-    rclcpp::sleep_for(std::chrono::milliseconds(200));
-  }
-
-  EXPECT_GE(messages_received, 5)
-      << "Expected at least 5 SOC messages over time";
-}
