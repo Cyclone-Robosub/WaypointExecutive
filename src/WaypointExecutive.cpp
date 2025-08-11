@@ -178,6 +178,7 @@ void WaypointExecutive::ServiceINTofStep() {
     EndReport(ServiceINT);
   }
   if (ServiceINT.REEF_SHARK) {
+    CurrentStep.VisionINTCommand_Serviced.value().second = true;
   }
   if (ServiceINT.BINS_SPOTTED) {
     // Get Waypoint or coordinate from Vision.
@@ -269,6 +270,9 @@ bool WaypointExecutive::MetPositionandTimeReq() {
                            std::chrono::steady_clock::now() - timeInitalStep)
                            .count();
       if (deltaTime >= CurrentStep.MaxTime) {
+        Interrupts generateINT;
+        generateINT.RanOutofTimeStep = true;
+        Current_Interrupts.push(generateINT);
         return true;
       }
       return false;
@@ -288,6 +292,9 @@ bool WaypointExecutive::MetPositionandTimeReq() {
                            std::chrono::steady_clock::now() - timeInitalStep)
                            .count();
       if (deltaTime >= CurrentStep.MaxTime) {
+        Interrupts generateINT;
+        generateINT.RanOutofTimeStep = true;
+        Current_Interrupts.push(generateINT);
         return true;
       }
       return false;
@@ -318,7 +325,7 @@ bool WaypointExecutive::MetPositionandTimeReq() {
 void WaypointExecutive::EndReport(Interrupts interrupt) {
   std::ofstream ReportFile;
   ReportFile.open("../../End_Report.txt", std::ios::app);
-  ReportFile << "___________START OF REPORT__________" << std::endl;
+  ReportFile << "___________START OF NOTIFICATION__________" << std::endl;
   ReportFile << "Reason for Report : ";
   if (MissionQueue.allTasksComplete()) {
     ReportFile << "All Tasks are Completed." << std::endl;
@@ -331,6 +338,7 @@ void WaypointExecutive::EndReport(Interrupts interrupt) {
   if (interrupt.RanOutofTimeStep) {
     ReportFile << "A step was skipped due to running out of time" << std::endl;
   }
-  ReportFile << "___________END OF REPORT ___________" << std::endl;
+  ReportFile << "___________END OF NOTIFICATION ___________" << std::endl;
+  ReportFile << "\n";
   ReportFile.close();
 }

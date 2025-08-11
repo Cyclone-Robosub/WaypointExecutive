@@ -77,7 +77,7 @@ protected:
   void TearDown() override
   {
       position_pub_thread.request_stop();
-    exec_instance->EndReport(); // Ensure file writing done
+  //  exec_instance->EndReport(); // Ensure file writing done
     rclcpp::shutdown();
   }
 
@@ -130,5 +130,34 @@ TEST_F(WaypointExecutiveTest, DetectsReefShark)
 
   rclcpp::sleep_for(std::chrono::milliseconds(200));
   EXPECT_EQ(exec_instance->Controller(), 1);
+}
+  bool reportContains(const std::string &text)
+  {
+    std::ifstream report("../../End_Report.txt");
+    if (!report.is_open()) return false;
+    std::string line;
+    while (std::getline(report, line))
+      if (line.find(text) != std::string::npos)
+        return true;
+    return false;
+  }
+TEST_F(WaypointExecutiveTest, VisionCompletesMission)
+{
+  // Send a detection JSON
+  std_msgs::msg::String vision_msg;
+  vision_msg.data = R"([{"class_name":"Reef Shark"}])";
+  vision_pub->publish(vision_msg);
+
+  // Let mission run a bit
+  for (int i = 0; i < 20; ++i)
+  {
+    exec_instance->Controller();
+    rclcpp::sleep_for(std::chrono::milliseconds(100));
+    if (reportContains("All Tasks are Completed."))
+      break;
+  }
+
+  EXPECT_TRUE(reportContains("All Tasks are Completed."))
+      << "Expected End_Report.txt to contain completion message.";
 }
 

@@ -38,4 +38,5 @@
     If the battery is too low -> Surface, Make a Report, and Stop Operating.
     If the Robot saw an object -> Execute actions that has already been cleared by pre-existing conditions, requirments, and commands.
     If the robot needs to trigger the manipulation code. -> Send the command through ROS.
-
+## What are some examples of the controller decision making?
+    Imagine the robot needs to look for the gate, choose the right side, and needs to go through it. The Mission file should contain the waypoints of each step with a vision command attached to one of the waypoints, so that the robot can be interrupted once it spots the object and can go to the next waypoint.

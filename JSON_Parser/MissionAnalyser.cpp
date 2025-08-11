@@ -60,7 +60,7 @@ void MissionAnalyser::parseJSONForMission() {
                     }
                     int maxTime = waypointData["max_time"].get<int>();
                     if (maxTime > 0) {
-                        step.max_time = max_time;
+                        step.MaxTime = maxTime;
                     }
                 }
                 else if (stepJson.contains("barrel_roll")) {
