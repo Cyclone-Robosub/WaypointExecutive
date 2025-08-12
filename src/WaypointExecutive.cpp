@@ -168,11 +168,13 @@ void WaypointExecutive::ServiceINTofStep() {
   std::cout << "service" << std::endl;
   if (ServiceINT.SOCDANGER) {
     // Battery WayPoint
-    CurrentStep = Step();
+  //  CurrentStep = Step();
     // CurrentStep.WaypointPointer = std::make_shared<waypointPtr>(); //
     // Creating a new waypoint.
-    SendCurrentWaypoint();
+   // SendCurrentWaypoint();
     EndReport(ServiceINT);
+    StopWorking = true;
+    
   }
   if (ServiceINT.RanOutofTimeStep) {
     EndReport(ServiceINT);
@@ -333,7 +335,6 @@ void WaypointExecutive::EndReport(Interrupts interrupt) {
   }
   if (interrupt.SOCDANGER) {
     ReportFile << "State of Charge was low. Check Logs of SOC" << std::endl;
-    StopWorking = true;
   }
   if (interrupt.RanOutofTimeStep) {
     ReportFile << "A step was skipped due to running out of time" << std::endl;
