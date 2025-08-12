@@ -5,6 +5,10 @@
 #include <memory>
 #include <regex>
 
+#include "../lib/JSON/Json.hpp"
+
+using json = nlohmann::json;
+
 void WaypointExecutive::SetupROS() {
   callbackINT =
       this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
@@ -164,16 +168,19 @@ void WaypointExecutive::ServiceINTofStep() {
   std::cout << "service" << std::endl;
   if (ServiceINT.SOCDANGER) {
     // Battery WayPoint
-    CurrentStep = Step();
+  //  CurrentStep = Step();
     // CurrentStep.WaypointPointer = std::make_shared<waypointPtr>(); //
     // Creating a new waypoint.
-    SendCurrentWaypoint();
+   // SendCurrentWaypoint();
     EndReport(ServiceINT);
+    StopWorking = true;
+    
   }
-  if(ServiceINT.RanOutofTimeStep){
+  if (ServiceINT.RanOutofTimeStep) {
     EndReport(ServiceINT);
   }
   if (ServiceINT.REEF_SHARK) {
+    CurrentStep.VisionINTCommand_Serviced.value().second = true;
   }
   if (ServiceINT.BINS_SPOTTED) {
     // Get Waypoint or coordinate from Vision.
@@ -217,20 +224,19 @@ void WaypointExecutive::SOCIntCallback(
 }
 void WaypointExecutive::VisionDetector(
     const std_msgs::msg::String::SharedPtr msg) {
-  std::regex class_regex(R"(Class:\s*([^,]+))");
-  std::smatch match;
+  try {
+    json parsed = json::parse(msg->data);
 
-  if (std::regex_search(msg->data, match, class_regex)) {
-    std::string detected_class = match[1];  // store in variable
-    RCLCPP_INFO(this->get_logger(), "Detected class: %s",
-                detected_class.c_str());
+    for (const auto &item : parsed) {
+      if (item.contains("class_name") && item["class_name"].is_string()) {
+        std::lock_guard<std::mutex> lock(VisionVectorMutex);
+        Last_Detected_Objects_Vector.push_back(
+            item["class_name"].get<std::string>());
+      }
+    }
 
-    // you can now store it in a member variable for later use
-    std::string last_detected_class = detected_class;
-    std::lock_guard<std::mutex> lock(VisionVectorMutex);
-    Last_Detected_Objects_Vector.push_back(last_detected_class);
-  } else {
-    RCLCPP_WARN(this->get_logger(), "No class found in message.");
+  } catch (const json::parse_error &e) {
+    std::cerr << "could not parse vision data." << std::endl;
   }
 }
 void WaypointExecutive::PositionCallback(
@@ -256,16 +262,19 @@ bool WaypointExecutive::MetPositionandTimeReq() {
       // Check to see if we need to start the timer. (Don't check for time req
       // yet.)
       if (CurrentStep.HoldWaypTime_TimeElapsed.has_value()) {
-          CurrentStep.StartTimer();
+        CurrentStep.StartTimer();
       }
     }
     // We ran off course or never reached it.
     else {
       CurrentStep.StopTimer();
-       auto deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
-                    std::chrono::steady_clock::now() - timeInitalStep
-                 ).count();
-      if(deltaTime >= CurrentStep.MaxTime){
+      unsigned int deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
+                           std::chrono::steady_clock::now() - timeInitalStep)
+                           .count();
+      if (deltaTime >= CurrentStep.MaxTime) {
+        Interrupts generateINT;
+        generateINT.RanOutofTimeStep = true;
+        Current_Interrupts.push(generateINT);
         return true;
       }
       return false;
@@ -281,9 +290,20 @@ bool WaypointExecutive::MetPositionandTimeReq() {
                   << std::endl;
       }
     } else {
-      // The Robot has not started the current position topic.
+      unsigned int deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
+                           std::chrono::steady_clock::now() - timeInitalStep)
+                           .count();
+      if (deltaTime >= CurrentStep.MaxTime) {
+        Interrupts generateINT;
+        generateINT.RanOutofTimeStep = true;
+        Current_Interrupts.push(generateINT);
+        return true;
+      }
       return false;
     }
+  } else {
+    // The Robot has not started the current position topic.
+    return false;
   }
 
   //}
@@ -307,7 +327,7 @@ bool WaypointExecutive::MetPositionandTimeReq() {
 void WaypointExecutive::EndReport(Interrupts interrupt) {
   std::ofstream ReportFile;
   ReportFile.open("../../End_Report.txt", std::ios::app);
-  ReportFile << "___________START OF REPORT__________" << std::endl;
+  ReportFile << "___________START OF NOTIFICATION__________" << std::endl;
   ReportFile << "Reason for Report : ";
   if (MissionQueue.allTasksComplete()) {
     ReportFile << "All Tasks are Completed." << std::endl;
@@ -315,11 +335,11 @@ void WaypointExecutive::EndReport(Interrupts interrupt) {
   }
   if (interrupt.SOCDANGER) {
     ReportFile << "State of Charge was low. Check Logs of SOC" << std::endl;
-    StopWorking = true;
   }
-  if(interrupt.RanOutofTimeStep){
+  if (interrupt.RanOutofTimeStep) {
     ReportFile << "A step was skipped due to running out of time" << std::endl;
   }
-  ReportFile << "___________END OF REPORT ___________" << std::endl;
+  ReportFile << "___________END OF NOTIFICATION ___________" << std::endl;
+  ReportFile << "\n";
   ReportFile.close();
 }

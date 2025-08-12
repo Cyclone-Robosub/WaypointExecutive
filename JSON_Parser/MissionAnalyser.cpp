@@ -58,6 +58,10 @@ void MissionAnalyser::parseJSONForMission() {
                     if (holdTime > 0) {
                         step.HoldWaypTime_TimeElapsed = std::make_pair(holdTime, 0.0);
                     }
+                    int maxTime = waypointData["max_time"].get<int>();
+                    if (maxTime > 0) {
+                        step.MaxTime = maxTime;
+                    }
                 }
                 else if (stepJson.contains("barrel_roll")) {
                     json::reference rollData = stepJson["barrel_roll"];

@@ -15,7 +15,7 @@
     Its only output is a desired waypoint at the current time.
 ## What is a task and a step?
     A task is a major action, expectation, or obstcale that the robot should do such as attempting to find and pass through the gate.
-    A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act, and/or a manipulation object that the robot needs to execute. 
+    A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act, or a manipulation object that the robot needs to execute. 
 ## How is a step deemed completed?
     If the robot goes to the waypoint and either holds or touches it as instructed.
         OR
@@ -23,11 +23,13 @@
         OR
     If the robot needs to hold its position(was never given a waypoint) for a time period.
         OR
-    If it saw the required vision object.
+    If it saw the required vision object and executed an action from it.
         OR
     If it executed the requried manipulation task.
     
     If none of these conditions passes, it has not been deemed completed.
+
+    If any one of these conditions passes, the controller moves on.
 ## What are the changes of states that the robot can experience?
     The battery being too low to continue.
     The Robot saw an object it needed to see.
@@ -36,4 +38,5 @@
     If the battery is too low -> Surface, Make a Report, and Stop Operating.
     If the Robot saw an object -> Execute actions that has already been cleared by pre-existing conditions, requirments, and commands.
     If the robot needs to trigger the manipulation code. -> Send the command through ROS.
-
+## What are some examples of the controller decision making?
+    Imagine the robot needs to look for the gate, choose the right side, and needs to go through it. The Mission file should contain the waypoints of each step with a vision command attached to one of the waypoints, so that the robot can be interrupted once it spots the object and can go to the next waypoint.

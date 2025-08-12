@@ -7,6 +7,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_gtest REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -49,9 +50,18 @@ install(DIRECTORY
   OPTIONAL
 )
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
-endif()
+ament_add_gtest(waypoint_test
+    test/test_waypoint.cpp
+    src/mainWaypoint.cpp
+  src/WaypointExecutive.cpp
+  src/Task.cpp
+  JSON_Parser/MissionAnalyser.cpp
+  crs_common/position/position.cpp
+  )
+ament_target_dependencies(waypoint_test
+    rclcpp
+    std_msgs
+  geometry_msgs
+  )
 
 ament_package()
