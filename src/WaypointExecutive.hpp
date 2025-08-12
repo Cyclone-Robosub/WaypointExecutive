@@ -70,6 +70,7 @@ public:
 int Controller();
 private:
   void SetupROS();
+  void StartorStopCameras();
   void SendCurrentWaypoint();
   void getNewMissionStep();
   void getNewMissionTask();
@@ -97,6 +98,10 @@ private:
   rclcpp::CallbackGroup::SharedPtr callbackPosition;
   rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr
       WaypointPublisher;
+      rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr
+      Camera1Publisher;
+      rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr
+      Camera2Publisher;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr CurrentTaskPub;
   rclcpp::Publisher<std_msgs::msg::Int64>::SharedPtr Manipulation_Publisher;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr VisionSub;

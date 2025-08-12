@@ -24,6 +24,10 @@ void WaypointExecutive::SetupROS() {
 
   WaypointPublisher = this->create_publisher<std_msgs::msg::Float32MultiArray>(
       "waypoint_topic", 10);
+       Camera1Publisher = this->create_publisher<std_msgs::msg::Bool>(
+      "camera1_command_topic", 10);
+       Camera2Publisher = this->create_publisher<std_msgs::msg::Bool>(
+      "camera2_command_topic", 10);
   SOCINTSub = this->create_subscription<std_msgs::msg::Bool>(
       "SOCIntTopic", 10,
       std::bind(&WaypointExecutive::SOCIntCallback, this,
@@ -214,6 +218,14 @@ void WaypointExecutive::getNewMissionStep() {
   if (CurrentStep.WaypointPointer != nullptr) {
     CurrentWaypointPtr = CurrentStep.WaypointPointer;
   }
+  if(CurrentStep.VisionINTCommand_Serviced.has_value()){
+    StartorStopCameras();
+  }else{
+    auto message = std_msgs::msg::Bool();
+    message.data = false;
+    Camera1Publisher->publish(message);
+    Camera2Publisher->publish(message);
+  }
   timeInitalStep = std::chrono::steady_clock::now();
   std::cout << "new mission step " << std::endl;
 }
@@ -322,6 +334,19 @@ bool WaypointExecutive::MetPositionandTimeReq() {
   std::cout << "met TIME and pos" << std::endl;
   return true;
 }
+
+void WaypointExecutive::StartorStopCameras(){
+  auto messageCamera1 = std_msgs::msg::Bool();
+  auto messageCamera2 = std_msgs::msg::Bool();
+  messageCamera1.data = false;
+  messageCamera2.data = false;
+  if(CurrentStep.VisionINTCommand_Serviced.value().first == "DROP_INTO_BINS"){
+    messageCamera2.data = true;
+  }
+  Camera1Publisher->publish(messageCamera1);
+  Camera2Publisher->publish(messageCamera2);
+}
+
 
 /// @brief: Will Exit itself after creating Report
 void WaypointExecutive::EndReport(Interrupts interrupt) {
