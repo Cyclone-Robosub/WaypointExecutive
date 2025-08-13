@@ -13,11 +13,11 @@ int main() {
         std::cout << "\nTask " << taskCount << ": " << task.name << std::endl;
         
         int stepCount = 0;
-        std::queue<Step> steps = task.steps;
+        std::queue<Step> step_queue = task.step_queue;
         
-        while (!steps.empty()) {
-            Step step = steps.front();
-            steps.pop();
+        while (!step_queue.empty()) {
+            Step step = step_queue.front();
+            step_queue.pop();
             stepCount++;
             
             std::cout << "  Step " << stepCount << ":" << std::endl;
@@ -28,8 +28,7 @@ int main() {
                 std::cout << "      Is waypoint: No" << std::endl;
             }
             
-            std::cout << "      Needs vision: " << (step.NeedsVision ? "Yes" : "No") << std::endl;
-            std::cout << "      Is interruptable: " << (step.isInterruptable ? "Yes" : "No") << std::endl;
+            // std::cout << "      Is interruptable: " << (step.isInterruptable ? "Yes" : "No") << std::endl;
             std::cout << "      Do barrel roll: " << (step.doBarrelRoll ? "Yes" : "No") << std::endl;
             
             if (step.HoldWaypTime_TimeElapsed.has_value()) {
