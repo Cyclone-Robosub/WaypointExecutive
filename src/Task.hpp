@@ -1,7 +1,7 @@
 #ifndef TASK_HPP
 #define TASK_HPP
 
-#include "../../crs_common/position/position.hpp"
+#include "../crs_common/position/position.hpp"
 #include "../JSON_Parser/MissionAnalyser.hpp"
 #include <chrono>
 #include <memory>

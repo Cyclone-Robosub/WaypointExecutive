@@ -2,7 +2,7 @@
 #define MISSION_ANALYSER_HPP
 
 
-#include "../../crs_common/position/position.hpp"
+#include "../crs_common/position/position.hpp"
 #include "../lib/JSON/Json.hpp"
 #include "../src/Task.hpp"
 #include <queue>

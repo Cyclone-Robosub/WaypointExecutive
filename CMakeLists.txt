@@ -24,7 +24,7 @@ add_executable(waypoint_executive
   src/WaypointExecutive.cpp
   src/Task.cpp
   JSON_Parser/MissionAnalyser.cpp
-  ../crs_common/position/position.cpp
+  crs_common/position/position.cpp
 )
 
 ament_target_dependencies(waypoint_executive
@@ -43,7 +43,9 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
   OPTIONAL
 )
-
+install(DIRECTORY launch/
+  DESTINATION share/${PROJECT_NAME}/launch
+)
 install(DIRECTORY
   config
   DESTINATION share/${PROJECT_NAME}/
@@ -55,7 +57,7 @@ ament_add_gtest(waypoint_test
   src/WaypointExecutive.cpp
   src/Task.cpp
   JSON_Parser/MissionAnalyser.cpp
-  ../crs_common/position/position.cpp
+  crs_common/position/position.cpp
   )
 ament_target_dependencies(waypoint_test
     rclcpp
