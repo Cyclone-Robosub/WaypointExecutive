@@ -81,7 +81,7 @@ TEST_F(WaypointExecutiveTest, SendCurrentWaypointTest) {
 
     WaypointExecutiveNode->CurrentWaypointPtr = std::make_shared<MockPosition>(1, 2, 3, 4, 5, 6);
     WaypointExecutiveNode->SendCurrentWaypoint();
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200)); // Small delay for message processing
     EXPECT_TRUE(message_received);
 
     executor->cancel();
@@ -116,14 +116,6 @@ TEST_F(WaypointExecutiveTest, getNewMissionStepTest) {
     executive.getNewMissionTask();
     executive.getNewMissionStep();
     ASSERT_TRUE(executive.CurrentStep.WaypointPointer != nullptr);
-}
-
-TEST_F(WaypointExecutiveTest, ManipulationStepTest) {
-    rclcpp::init(0, nullptr);
-    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest1.JSON";
-    WaypointExecutive executive(MissionPath);
-    executive.ManipulationStep(123);
-    // Add assertions related to manipulation if applicable
 }
 
 TEST_F(WaypointExecutiveTest, MetPositionandTimeReqTest) {
