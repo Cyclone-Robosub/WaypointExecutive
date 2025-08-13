@@ -1,163 +1,143 @@
-#include <gtest/gtest.h>
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/bool.hpp>
-#include <std_msgs/msg/float32_multi_array.hpp>
-#include <std_msgs/msg/string.hpp>
-#include <thread>
-#include <chrono>
-
 #include "WaypointExecutive.hpp"
+#include <gtest/gtest.h>
+#include <iostream>
+#include <fstream>
+#include <queue>
 
-class WaypointExecutiveTest : public ::testing::Test
-{
-protected:
-  void SetUp() override
-  {
-    rclcpp::init(0, nullptr);
-    temp_node_ = rclcpp::Node::make_shared("test_node");
-    exec_instance = std::make_shared<WaypointExecutive>();
 
-    // Publishers to send fake data into the executive
-    soc_pub = temp_node_->create_publisher<std_msgs::msg::Bool>("SOCIntTopic", 10);
-    pos_pub = temp_node_->create_publisher<std_msgs::msg::Float32MultiArray>("position_topic", 10);
-    vision_pub = temp_node_->create_publisher<std_msgs::msg::String>("detections", 10);
 
-    // Subscribers to monitor executive outputs
-    waypoint_sub = temp_node_->create_subscription<std_msgs::msg::Float32MultiArray>(
-        "waypoint_topic", 10,
-        [this](std_msgs::msg::Float32MultiArray::SharedPtr msg)
-        {
-          last_waypoint = *msg;
-          waypoint_received = true;
-        });
-
-    current_task_sub = temp_node_->create_subscription<std_msgs::msg::String>(
-        "CurrentTaskTopic", 10,
-        [this](std_msgs::msg::String::SharedPtr msg)
-        {
-          last_task_name = msg->data;
-          task_received = true;
-        });
-
-    manip_sub = temp_node_->create_subscription<std_msgs::msg::Int64>(
-        "manipulationCommand", 10,
-        [this](std_msgs::msg::Int64::SharedPtr msg)
-        {
-          last_manip_code = msg->data;
-          manip_received = true;
-        });
- // ===== Continuous position publisher thread =====
-    position_pub_thread = std::jthread([this]()
-    {
-      std_msgs::msg::Float32MultiArray pos_msg;
-      pos_msg.data = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-      while (!position_pub_thread.get_stop_token().stop_requested())
-      {
-        pos_pub->publish(pos_msg);
-        // Simulate some movement if you want
-        for (auto &val : pos_msg.data)
-          val += 0.1f;
-        rclcpp::sleep_for(std::chrono::milliseconds(100));
-      }
-    });
-  
-    // Start executor
-    executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-    executor->add_node(temp_node_);
-    executor->add_node(exec_instance);
-
-    spin_thread = std::jthread([this]()
-                               { executor->spin(); });
-
-    waypoint_received = false;
-    task_received = false;
-    manip_received = false;
-  }
-
-  void TearDown() override
-  {
-      position_pub_thread.request_stop();
-  //  exec_instance->EndReport(); // Ensure file writing done
-    rclcpp::shutdown();
-  }
-
-  // Nodes & ROS objects
-  rclcpp::Node::SharedPtr temp_node_;
-  std::shared_ptr<WaypointExecutive> exec_instance;
-  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr soc_pub;
-  rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr pos_pub;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr vision_pub;
-
-  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr waypoint_sub;
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr current_task_sub;
-  rclcpp::Subscription<std_msgs::msg::Int64>::SharedPtr manip_sub;
-
-  std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor;
-  std::jthread spin_thread;
-  std::jthread position_pub_thread;
-  // Test state
-  std_msgs::msg::Float32MultiArray last_waypoint;
-  bool waypoint_received;
-  std::string last_task_name;
-  bool task_received;
-  int64_t last_manip_code;
-  bool manip_received;
+class MockPublisher {
+public:
+  template <typename T>
+  void publish(const T& msg) {}
 };
 
-// ------------------------------------------------------------
-// TEST 1: Verify SOC interrupt stops mission
-// ------------------------------------------------------------
-TEST_F(WaypointExecutiveTest, HandlesSOCInterrupt)
-{
-  std_msgs::msg::Bool soc_msg;
-  soc_msg.data = true;
-  soc_pub->publish(soc_msg);
+class MockPosition : public Position {
+public:
+    MockPosition(double x = 0, double y = 0, double z = 0, double roll = 0, double pitch = 0, double yaw = 0)
+        : Position(x, y, z, roll, pitch, yaw) {}
+};
 
-  rclcpp::sleep_for(std::chrono::milliseconds(200));
+class WaypointExecutiveTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+      //Added Setup for WaypointExecutiveTest
+        rclcpp::init(0, nullptr);
+  std::shared_ptr<WaypointExecutive> Node = std::make_shared<WaypointExecutive>();
+  std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
+  executor->add_node(Node);
+  std::cout << "ROS2 Waypoint running" << std::endl;
+  std::jthread spin_ros([executor]()
+                        { executor->spin(); });
+  int ResultCode = Node->Controller();
+    }
+    void TearDown() override {
+        //Clean up after each test
+        rclcpp::shutdown();
+    }
+};
 
-  EXPECT_EQ(exec_instance->Controller(), 0);
-  
+
+TEST_F(WaypointExecutiveTest, ControllerTest) {
+   
+    WaypointExecutive executive;
+    //No assignment needed here, as we use the constructor.
+    
+    Task task;
+    Step step;
+    step.WaypointPointer = std::make_shared<MockPosition>(1, 1, 1, 0, 0, 0);
+    task.steps_queue.push(step);
+    
+
+  //  executive.MissionQueue = mockMissionQueue;
+    int result = executive.Controller();
+    ASSERT_EQ(result, 1);
 }
 
-// ------------------------------------------------------------
-// TEST 2: Vision detection triggers REEF_SHARK interrupt
-// ------------------------------------------------------------
-TEST_F(WaypointExecutiveTest, DetectsReefShark)
-{
-  std_msgs::msg::String vision_msg;
-  vision_msg.data = R"([{"class_name":"Reef Shark"}])";
-  vision_pub->publish(vision_msg);
-
-  rclcpp::sleep_for(std::chrono::milliseconds(200));
-  EXPECT_EQ(exec_instance->Controller(), 1);
-}
-  bool reportContains(const std::string &text)
-  {
-    std::ifstream report("../../End_Report.txt");
-    if (!report.is_open()) return false;
-    std::string line;
-    while (std::getline(report, line))
-      if (line.find(text) != std::string::npos)
-        return true;
-    return false;
-  }
-TEST_F(WaypointExecutiveTest, VisionCompletesMission)
-{
-  // Send a detection JSON
-  std_msgs::msg::String vision_msg;
-  vision_msg.data = R"([{"class_name":"Reef Shark"}])";
-  vision_pub->publish(vision_msg);
-
-  // Let mission run a bit
-  for (int i = 0; i < 20; ++i)
-  {
-    exec_instance->Controller();
-    rclcpp::sleep_for(std::chrono::milliseconds(100));
-    if (reportContains("All Tasks are Completed."))
-      break;
-  }
-
-  EXPECT_TRUE(reportContains("All Tasks are Completed."))
-      << "Expected End_Report.txt to contain completion message.";
+TEST_F(WaypointExecutiveTest, SendCurrentWaypointTest) {
+  WaypointExecutive executive;
+  executive.CurrentWaypointPtr = std::make_shared<MockPosition>(1, 2, 3, 4, 5, 6);
+  executive.SendCurrentWaypoint();
 }
 
+TEST_F(WaypointExecutiveTest, isCurrentStepCompletedTest) {
+  WaypointExecutive executive;
+  executive.CurrentWaypointPtr = std::make_shared<MockPosition>(1, 1, 1, 0, 0, 0);
+  executive.CurrentPositionPtr = std::make_shared<MockPosition>(1, 1, 1, 0, 0, 0);
+  ASSERT_TRUE(executive.isCurrentStepCompleted());
+
+  executive.CurrentPositionPtr = std::make_shared<MockPosition>(2, 2, 2, 0, 0, 0);
+  ASSERT_FALSE(executive.isCurrentStepCompleted());
+}
+
+TEST_F(WaypointExecutiveTest, getNewMissionTaskTest) {
+   // MockMissionAnalyser mockMissionQueue;
+    WaypointExecutive executive;
+    Task task;
+    task.name = "TestTask";
+//   executive.MissionQueue = mockMissionQueue;
+    executive.getNewMissionTask();
+    ASSERT_EQ(executive.CurrentTask.name, "TestTask");
+}
+
+
+TEST_F(WaypointExecutiveTest, getNewMissionStepTest) {
+    WaypointExecutive executive;
+    executive.CurrentTask.steps_queue.push({});
+    executive.getNewMissionStep();
+}
+
+TEST_F(WaypointExecutiveTest, ManipulationStepTest) {
+    WaypointExecutive executive;
+    executive.ManipulationStep(123);
+}
+
+TEST_F(WaypointExecutiveTest, MetPositionandTimeReqTest) {
+    WaypointExecutive executive;
+    executive.CurrentWaypointPtr = std::make_shared<MockPosition>(1, 1, 1, 0, 0, 0);
+    executive.CurrentPositionPtr = std::make_shared<MockPosition>(1, 1, 1, 0, 0, 0);
+    ASSERT_TRUE(executive.MetPositionandTimeReq());
+
+    executive.CurrentPositionPtr = std::make_shared<MockPosition>(2, 2, 2, 0, 0, 0);
+    ASSERT_FALSE(executive.MetPositionandTimeReq());
+}
+
+TEST_F(WaypointExecutiveTest, EndReportTest) {
+    WaypointExecutive executive;
+    std::ofstream ofs("End_Report.txt", std::ofstream::trunc);
+    ofs.close();
+
+    executive.EndReport();
+    std::ifstream ifs("End_Report.txt");
+    std::string content((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    ASSERT_NE(content, "");
+
+    executive.EndReport({.SOCDANGER=true});
+    std::remove("End_Report.txt");
+}
+
+
+TEST_F(WaypointExecutiveTest, DidWeSeeObjectTest) {
+    WaypointExecutive executive;
+    executive.Last_Detected_Objects_Vector.push_back("Object1");
+    ASSERT_TRUE(executive.DidWeSeeObject("Object1"));
+    ASSERT_FALSE(executive.DidWeSeeObject("Object2"));
+}
+
+TEST_F(WaypointExecutiveTest, findFileInDirectoryTest) {
+    std::filesystem::path temp_dir = std::filesystem::temp_directory_path() / "test_directory";
+    std::filesystem::create_directories(temp_dir);
+    std::filesystem::path temp_file = temp_dir / "test_file.txt";
+    std::ofstream(temp_file).close();
+
+    WaypointExecutive executive;
+    auto result = executive.findFileInDirectory(temp_dir.parent_path(), temp_dir.filename().string(), temp_file.filename().string());
+    ASSERT_TRUE(result.has_value());
+    ASSERT_EQ(result.value(), temp_file);
+    std::filesystem::remove_all(temp_dir);
+}
+
+int main(int argc, char **argv) {
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}

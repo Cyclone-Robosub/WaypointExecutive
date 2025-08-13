@@ -52,7 +52,6 @@ install(DIRECTORY
 
 ament_add_gtest(waypoint_test
     test/test_waypoint.cpp
-    src/mainWaypoint.cpp
   src/WaypointExecutive.cpp
   src/Task.cpp
   JSON_Parser/MissionAnalyser.cpp

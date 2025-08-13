@@ -6,7 +6,10 @@
 #include <regex>
 
 #include "../lib/JSON/Json.hpp"
-
+enum class ControllerStatus{
+  COMPLETED_TASKS = 0,
+  SOC_IS_LOW = 1
+};
 using json = nlohmann::json;
 
 void WaypointExecutive::SetupROS() {

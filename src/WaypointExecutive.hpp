@@ -79,7 +79,7 @@ public:
     CurrentPositionPtr = std::make_shared<Position>();
   }
 int Controller();
-private:
+friend class WaypointExecutiveTest;
   void SetupROS();
   void StartorStopCameras();
   void SendCurrentWaypoint();

@@ -10,7 +10,9 @@ MissionAnalyser::MissionAnalyser()
 
 MissionAnalyser::MissionAnalyser(std::string filePath) : filePath(filePath) {}
 MissionAnalyser::MissionAnalyser(std::filesystem::path filePath) : filePath(filePath) {}
-
+MissionAnalyser::MissionAnalyser(const MissionAnalyser& other) : filePath(other.filePath) {
+    copyQueue(other.mission);
+}
 Position MissionAnalyser::makePositionFromJSON(json::reference jsonData) {
     auto posArray = jsonData["position"].get<std::array<float, 6>>();
     return Position(posArray);
@@ -92,7 +94,43 @@ void MissionAnalyser::parseJSONForMission() {
 bool MissionAnalyser::allTasksComplete() {
     return mission.empty();
 }
+void MissionAnalyser::copyQueue(const std::queue<Task>& other) {
+    std::queue<Task> tempQueue = other; // Create a temporary copy to avoid modifying the original queue
+    while (!tempQueue.empty()) {
+        Task task = tempQueue.front();
+        tempQueue.pop();
+        // Deep copy of the task
+        Task copiedTask;
+        copiedTask.name = task.name;
 
+        std::queue<Step> tempStepQueue = task.steps_queue;
+        while (!tempStepQueue.empty()){
+            Step step = tempStepQueue.front();
+            tempStepQueue.pop();
+            Step copiedStep;
+            copiedStep.WaypointPointer = step.WaypointPointer ? std::make_shared<Position>(*step.WaypointPointer) : nullptr;
+            copiedStep.VisionINTCommand_Serviced = step.VisionINTCommand_Serviced;
+            copiedStep.isInterruptable = step.isInterruptable;
+            copiedStep.doBarrelRoll = step.doBarrelRoll;
+            copiedStep.stopWorking = step.stopWorking;
+            copiedStep.ManipulationCodeandStatus = step.ManipulationCodeandStatus;
+            copiedStep.HoldWaypTime_TimeElapsed = step.HoldWaypTime_TimeElapsed;
+            copiedStep.MaxTime = step.MaxTime;
+            copiedTask.steps_queue.push(copiedStep);
+        }
+        mission.push(copiedTask);
+    }
+}
+MissionAnalyser& MissionAnalyser::operator=(const MissionAnalyser& other) {
+    if (this != &other) { // Check for self-assignment
+        filePath = other.filePath;
+        // Clear the existing queue
+        std::queue<Task> empty;
+        std::swap(mission, empty);
+        copyQueue(other.mission);
+    }
+    return *this;
+}
 Task MissionAnalyser::popNextTask() {
     if (allTasksComplete()) {
         return Task{}; // return empty newTask if queue is empty

@@ -13,15 +13,17 @@ struct Task;
 class MissionAnalyser {
 public:
   MissionAnalyser();
+  MissionAnalyser(const MissionAnalyser& other); 
   MissionAnalyser(std::string filePath);
   MissionAnalyser(std::filesystem::path filePath);
   void parseJSONForMission();
   Task popNextTask();
   bool allTasksComplete();
-
+  MissionAnalyser& operator=(const MissionAnalyser& other);
 private:
   std::string filePath;
   std::queue<Task> mission;
   Position makePositionFromJSON(nlohmann::json::reference jsonData);
+  void copyQueue(const std::queue<Task>& other);
 };
 #endif
