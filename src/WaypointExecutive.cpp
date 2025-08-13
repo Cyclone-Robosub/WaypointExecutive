@@ -368,3 +368,35 @@ void WaypointExecutive::EndReport(Interrupts interrupt) {
   ReportFile << "\n";
   ReportFile.close();
 }
+// Function to find a specific file within a specific directory
+std::optional<std::filesystem::path> WaypointExecutive::findFileInDirectory(
+    const std::filesystem::path& start_path, 
+    const std::string& directory_to_find, 
+    const std::string& file_to_find) {
+    
+    // Create an empty path to store the found directory
+    std::filesystem::path found_directory;
+
+    // Use a recursive iterator to search all subdirectories
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(start_path)) {
+        // Check if the current entry is a directory and has the correct name
+        if (entry.is_directory() && entry.path().filename() == directory_to_find) {
+            std::cout << "Found directory: " << entry.path() << std::endl;
+            found_directory = entry.path();
+            
+            // Now, iterate within this found directory to find the file
+            for (const auto& sub_entry : std::filesystem::directory_iterator(found_directory)) {
+                if (sub_entry.is_regular_file() && sub_entry.path().filename() == file_to_find) {
+                    std::cout << "Found file: " << sub_entry.path() << std::endl;
+                    return sub_entry.path(); // Return the full path to the file
+                }
+            }
+            // If the file wasn't found in the first "JSON_Parser" directory, 
+            // you might want to continue searching for other "JSON_Parser" directories.
+            // If you only expect one, you can break here.
+        }
+    }
+    // If the loop finishes without finding the file, return an empty optional
+    std::cout << "File or directory not found." << std::endl;
+    return std::nullopt;
+}

@@ -58,12 +58,23 @@ struct Interrupts {
   bool RanOutofTimeStep{false};
 };
 
+
 class WaypointExecutive : public rclcpp::Node {
 public:
   WaypointExecutive()
       : Node("WaypointExecutiveNode") {
-    std::filesystem::path new_directory = "../../JSON_Parser/MissionPath.JSON";
-MissionQueue = MissionAnalyser(std::filesystem::current_path() / new_directory);
+        std::filesystem::path search_path = std::filesystem::current_path().parent_path().parent_path();
+    
+    auto mission_path_optional = findFileInDirectory(search_path, "JSON_Parser", "MissionPath.JSON");
+    if (mission_path_optional.has_value()) {
+        std::filesystem::path mission_path = mission_path_optional.value();
+        // Here's where you would use the path
+        // MissionQueue = MissionAnalyser(mission_path);
+        MissionQueue = MissionAnalyser(mission_path);
+        std::cout << "Final path to use: " << mission_path << std::endl;
+    } else {
+        std::cerr << "Could not find MissionPath.JSON." << std::endl;
+    }
     SetupROS();
     CurrentPositionPtr = std::make_shared<Position>();
   }
@@ -78,6 +89,9 @@ private:
   void ManipulationStep(int code);
   void CheckINTofStep();
   void ServiceINTofStep();
+  std::optional<std::filesystem::path> findFileInDirectory( const std::filesystem::path& start_path, 
+    const std::string& directory_to_find, 
+    const std::string& file_to_find);
   std::chrono::steady_clock::time_point timeInitalStep;
   // publisher of CurrentWaypointPtr topic.
   std::optional<bool> isSOCINT;
