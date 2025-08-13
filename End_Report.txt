@@ -7,7 +7,35 @@ Reason for Report : A step was skipped due to running out of time
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
-Reason for Report : All Tasks are Completed.
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step was skipped due to running out of time
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
@@ -20,14 +48,7 @@ ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
 Reason for Report : All Tasks are Completed.
-___________END OF NOTIFICATION ___________
-
-___________START OF NOTIFICATION__________
-Reason for Report : A step was skipped due to running out of time
-___________END OF NOTIFICATION ___________
-
-___________START OF NOTIFICATION__________
-Reason for Report : A step was skipped due to running out of time
+A step was skipped due to running out of time
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
@@ -35,11 +56,57 @@ Reason for Report : All Tasks are Completed.
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
-Reason for Report : A step was skipped due to running out of time
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
-Reason for Report : A step was skipped due to running out of time
+Reason for Report : A step, 0xaaaade297870, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaade297870, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaade2998b0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaade2998b0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41ba60, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41ba60, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41b8b0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41b8b0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41b8b0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41fbe0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaed41fbe0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+A step, 0xaaaaed41fbe0, was skipped due to running out of time
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
@@ -47,10 +114,16 @@ Reason for Report : All Tasks are Completed.
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
-Reason for Report : A step was skipped due to running out of time
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
 ___________END OF NOTIFICATION ___________
 
 ___________START OF NOTIFICATION__________
-Reason for Report : A step was skipped due to running out of time
+Reason for Report : All Tasks are Completed.
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
 ___________END OF NOTIFICATION ___________
 

@@ -359,13 +359,12 @@ void WaypointExecutive::EndReport(Interrupts interrupt) {
   ReportFile << "Reason for Report : ";
   if (MissionQueue.allTasksComplete()) {
     ReportFile << "All Tasks are Completed." << std::endl;
-    StopWorking = true;
   }
   if (interrupt.SOCDANGER) {
     ReportFile << "State of Charge was low. Check Logs of SOC" << std::endl;
   }
   if (interrupt.RanOutofTimeStep) {
-    ReportFile << "A step was skipped due to running out of time" << std::endl;
+    ReportFile << "A step, " << CurrentWaypointPtr.get() <<", was skipped due to running out of time" << std::endl;
   }
   ReportFile << "___________END OF NOTIFICATION ___________" << std::endl;
   ReportFile << "\n";

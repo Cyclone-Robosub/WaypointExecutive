@@ -61,20 +61,10 @@ struct Interrupts {
 
 class WaypointExecutive : public rclcpp::Node {
 public:
-  WaypointExecutive()
+  WaypointExecutive(std::filesystem::path givenMissionPathPath)
       : Node("WaypointExecutiveNode") {
-        std::filesystem::path search_path = std::filesystem::current_path().parent_path().parent_path();
-    
-    auto mission_path_optional = findFileInDirectory(search_path, "JSON_Parser", "MissionPath.JSON");
-    if (mission_path_optional.has_value()) {
-        std::filesystem::path mission_path = mission_path_optional.value();
-        // Here's where you would use the path
-        // MissionQueue = MissionAnalyser(mission_path);
-        MissionQueue = MissionAnalyser(mission_path);
-        std::cout << "Final path to use: " << mission_path << std::endl;
-    } else {
-        std::cerr << "Could not find MissionPath.JSON." << std::endl;
-    }
+       
+   MissionQueue = MissionAnalyser(givenMissionPathPath);
     SetupROS();
     CurrentPositionPtr = std::make_shared<Position>();
   }
