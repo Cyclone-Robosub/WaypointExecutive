@@ -143,8 +143,8 @@ void WaypointExecutive::CheckINTofStep() {
     } else if (cmd == "DROP_INTO_BINS") {
       // Handle DROP_INTO_BINS
       // e.g., check altitude, reset flag, set manip code
-      generateINT.TriggerManipSendCode = true;
-      didInterruptHappen = true;
+     // generateINT.TriggerManipSendCode = true;
+    //  didInterruptHappen = true;
     }
   }
   // listen to the vision topic;

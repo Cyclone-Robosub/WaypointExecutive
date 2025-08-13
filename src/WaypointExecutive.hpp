@@ -63,7 +63,7 @@ class WaypointExecutive : public rclcpp::Node {
 public:
   WaypointExecutive()
       : Node("WaypointExecutiveNode") {
-        std::filesystem::path search_path = std::filesystem::current_path().parent_path();
+        std::filesystem::path search_path = std::filesystem::current_path().parent_path().parent_path();
     
     auto mission_path_optional = findFileInDirectory(search_path, "JSON_Parser", "MissionPath.JSON");
     if (mission_path_optional.has_value()) {
