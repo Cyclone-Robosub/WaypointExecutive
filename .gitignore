@@ -8,8 +8,7 @@ cmake-build-debug
 
 # vscode config except spellchecks and cpp_properties
 .vscode/*
-.vscode/cspell.json
-!.vscode/c_cpp_properties.json
+!.vscode/launch.json
 !.vscode/cspell.json
 
 # Any log files
