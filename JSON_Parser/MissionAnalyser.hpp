@@ -21,7 +21,7 @@ public:
   bool allTasksComplete();
   MissionAnalyser& operator=(const MissionAnalyser& other);
 private:
-  std::string filePath;
+  std::filesystem::path filePath;
   std::queue<Task> mission;
   Position makePositionFromJSON(nlohmann::json::reference jsonData);
   void copyQueue(const std::queue<Task>& other);
