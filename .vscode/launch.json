@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "ROS2: Launch",
+            "type": "ros2",
+            "request": "launch",
+            "target": "${workspaceFolder}/launch/waypoint_executive.launch.py"
+        },
+        
+    {
+        "name": "ROS2: Attach",
+        "type": "ros2",
+        "request": "attach"
+    }
+    ]
+}
