@@ -1,16 +1,31 @@
-{
-	[ // task array
-		{ // task
-			name: ,
-			[ // steps array
-				{ // step
-					type:,
-					"position"
-					hold_time
-					"maxtime"
-					"vision_command" (optional if given type "Vision")
-				}
-			]
-		}
-	]
-}
+[
+  {
+    "name": "Task1",
+    "steps": [
+      {
+        "type": "waypoint",
+        "position": [1.0, 2.0, 3.0, 0.0, 0.0, 90.0],
+        "hold_time": 5,
+        "maxtime": 10
+      },
+      {
+        "type": "vision",
+        "position": [1.0, 2.5, 3.0, 0.0, 0.0, 45.0],
+        "hold_time": 3,
+        "maxtime": 8,
+        "vision_command": "DETECT_GATE"
+      }
+    ]
+  },
+  {
+    "name": "Task2",
+    "steps": [
+      {
+        "type": "manipulation",
+        "position": [0.5, 0.5, 1.0, 0.0, 45.0, 0.0],
+        "hold_time": 4,
+        "maxtime": 6
+      }
+    ]
+  }
+]
