@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/robot-mission-path.schema.json",
+  "title": "Robot Mission Path Schema",
+  "description": "A schema for defining robot mission path including waypoint, vision, manipulation, and wait operations. Each operation is defined as a 'step'.",
+  "type": "object",
+  "$defs": {
+    "position": {
+      "description": "6-element position array: [x, y, z, roll, pitch, yaw]. Supports floating-point.",
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "hold_time": {
+      "description": "If task is 'waypoint' and robot deemed itself at that position specified, robot will hold at that position for the time specified in seconds. Otherwise, wait at the current position for the time specified.",
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMinimum": true
+    },
+    "max_time": {
+      "description": "Maximum amount of time that a step can run for",
+      "type": "integer",
+      "minimum": 1
+    },
+    "base_task": {
+      "type": "object",
+      "description": "A possible task for the robot to run.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["vision", "waypoint", "wait", "manipulation"]
+        }
+      },
+      "required": ["type"]
+    }
+  },
+  "properties": {
+    "tasks": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "#/$defs/base_task" },
+          {
+            "if": {
+              "properties": { "type": { "const": "waypoint" } }
+            },
+            "then": {
+              "properties": {
+                "type": { "const": "waypoint" },
+                "position": { "$ref": "#/$defs/position" },
+                "hold_time": { "$ref": "#/$defs/hold_time" },
+                "max_time": { "$ref": "#/$defs/max_time" }
+              },
+              "required": ["position"],
+              "additionalProperties": false
+            }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "vision" } }
+            },
+            "then": {
+              "properties": {
+                "type": { "const": "vision" },
+                "position": { "$ref": "#/$defs/position" },
+                "vision": {
+                  "type": "string",
+                  "description": "The vision command to run. #TODO more description later"
+                },
+                "hold_time": { "$ref": "#/$defs/hold_time" },
+                "max_time": { "$ref": "#/$defs/max_time" }
+              },
+              "required": ["vision"],
+              "additionalProperties": false
+            }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "manipulation" } }
+            },
+            "then": {
+              "properties": {
+                "type": { "const": "manipulation" },
+                "manipulation_command": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "A positive integer representing the state of the arm/manipulator."
+                },
+                "hold_time": { "$ref": "#/$defs/hold_time" },
+                "max_time": { "$ref": "#/$defs/max_time" }
+              },
+              "required": ["manipulation_command"],
+              "additionalProperties": false
+            }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "wait" } }
+            },
+            "then": {
+              "properties": {
+                "type": { "const": "wait" },
+                "time": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "The time to wait"
+                }
+              },
+              "required": ["time"],
+              "additionalProperties": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  "required": ["tasks"]
+}
