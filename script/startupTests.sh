@@ -1,6 +1,6 @@
 source /opt/ros/jazzy/setup.bash
 cd ../
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Debug
+colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug 
 cd build/waypoint_executive
 
-./waypoint_test 
+./waypoint_executive_test

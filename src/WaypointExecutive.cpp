@@ -345,7 +345,7 @@ void WaypointExecutive::StartorStopCameras(){
   auto messageCamera2 = std_msgs::msg::Bool();
   messageCamera1.data = false;
   messageCamera2.data = false;
-  if(CurrentStep.VisionINTCommand_Serviced.value().first == "DROP_INTO_BINS"){
+  if(CurrentStep.VisionINTCommand_Serviced.value().first == "BINS_SPOTTED"){
     messageCamera2.data = true;
   }
   Camera1Publisher->publish(messageCamera1);

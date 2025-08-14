@@ -57,13 +57,13 @@ void MissionAnalyzer::parseJSONForMission()
 {
     nlohmann::json missionJson = load_json_from_file(filePath);
 
-    validate_with_detailed_errors(missionJson, filePath.filename().string());
+    validate_with_detailed_errors(missionJson, filePath);
     // The tasks array
     nlohmann::json tasks = missionJson["tasks"];
     for(auto& taskJson : tasks) {
         Task task;
         task.name = taskJson["name"];
-        for (auto& stepJson : taskJson) {
+        for (auto& stepJson : taskJson["steps"]) {
             Step step;
             std::string taskType = stepJson["type"];
             if (stepJson.contains("position")) {

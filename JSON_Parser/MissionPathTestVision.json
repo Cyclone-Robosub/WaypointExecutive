@@ -1,10 +1,16 @@
-  [ 
-  {
-    "name": "Task1", "steps": [{
-        "type": "vision",
-        "position": [1.0, 2.5, 3.0, 0.0, 0.0, 45.0],
-        "hold_time": 3,
-        "maxtime": 8,
-        "vision_command": "DETECT_GATE"
-      } ]
-  }]
+{
+  "$schema": "./MissionSchema.json",
+  "tasks": [
+    {
+      "name": "Detect target object",
+      "steps": [
+        {
+          "type": "vision",
+          "position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+          "vision_command": "BINS_SPOTTED",
+          "max_time": 5
+        }
+      ]
+    }
+  ]
+}

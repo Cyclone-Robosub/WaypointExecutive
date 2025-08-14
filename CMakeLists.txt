@@ -38,6 +38,7 @@ add_executable(${PROJECT_NAME}
   src/Task.cpp
   JSON_Parser/MissionAnalyzer.cpp
   crs_common/position/position.cpp
+   JSON_Parser/JsonHelper.cpp
 )
 
 # Link libraries to main executable (plain signature)
@@ -64,6 +65,7 @@ if(BUILD_TESTING)
     src/Task.cpp
     JSON_Parser/MissionAnalyzer.cpp
     crs_common/position/position.cpp
+    JSON_Parser/JsonHelper.cpp
   )
   
   # Link libraries to test executable (plain signature)

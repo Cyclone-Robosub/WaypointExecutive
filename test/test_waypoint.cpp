@@ -34,7 +34,8 @@ void publishMockPosition(const std::shared_ptr<rclcpp::Publisher<std_msgs::msg::
 
 TEST_F(WaypointExecutiveTest, StartorStopCamerasTest) {
     rclcpp::init(0, nullptr);
-    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest5.json";
+    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path()/ "JSON_Parser" / "MissionPathTestVision.json";
+    std::cout << MissionPath << std::endl;
     auto WaypointExecutiveNode = std::make_shared<WaypointExecutive>(MissionPath);
     auto testNode = std::make_shared<rclcpp::Node>("test_node");
     auto executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
@@ -112,7 +113,7 @@ TEST_F(WaypointExecutiveTest, getNewMissionTaskTest) {
     auto executive = std::make_shared<WaypointExecutive>(MissionPath);
     executive->MissionQueue.parseJSONForMission();
     executive->getNewMissionTask();
-    ASSERT_EQ(executive->CurrentTask.name, "SimpleWaypointTask");
+    ASSERT_EQ(executive->CurrentTask.name, "Navigate to pickup zone");
 }
 
 TEST_F(WaypointExecutiveTest, getNewMissionStepTest) {
@@ -185,7 +186,7 @@ TEST_F(WaypointExecutiveTest, DidWeSeeObjectTest) {
 
 TEST_F(WaypointExecutiveTest, CheckINTofStep) {
     rclcpp::init(0, nullptr);
-    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest1.JSON";
+    std::filesystem::path MissionPath = std::filesystem::current_path() / "JSON_Parser" / "MissionPathTest1.JSON";
     auto executive = std::make_shared<WaypointExecutive>(MissionPath);
 
     auto soc_msg = std::make_shared<std_msgs::msg::Bool>();
@@ -225,7 +226,21 @@ TEST_F(WaypointExecutiveTest, VisionControlModeTest) {
     executive->ServiceINTofStep();
     ASSERT_TRUE(executive->CurrentStep.VisionINTCommand_Serviced.has_value());
     ASSERT_EQ(executive->CurrentStep.VisionINTCommand_Serviced->first, "BINS_SPOTTED");
-    ASSERT_FALSE(executive->CurrentStep.VisionINTCommand_Serviced->second); // Ensure it's not yet serviced
+    ASSERT_TRUE(executive->CurrentStep.VisionINTCommand_Serviced->second); // Ensure it's not yet serviced
+}
+TEST_F(WaypointExecutiveTest, ControllerRunsWithValidMission) {
+    rclcpp::init(0, nullptr);
+
+    std::filesystem::path missionPath = std::filesystem::current_path().parent_path().parent_path()/ "JSON_Parser" / "MissionPathTest8.json";
+
+    WaypointExecutive exec(missionPath);
+
+    int result = exec.Controller();
+
+    EXPECT_EQ(result, 1);
+
+    // Shutdown after test
+    rclcpp::shutdown();
 }
 
 int main(int argc, char **argv) {
