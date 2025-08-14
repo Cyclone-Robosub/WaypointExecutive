@@ -56,7 +56,7 @@
                             "description": "Step type identifier"
                           },
                           "position": { "$ref": "#/definitions/position" },
-                          "vision": {
+                          "vision_command": {
                             "type": "string",
                             "description": "The vision command to run. #TODO more description later"
                           },
@@ -92,7 +92,7 @@
                           "position": { "$ref": "#/definitions/position" },
                           "manipulation_command": {
                             "type": "integer",
-                            "minimum": 1,
+                            "minimum": 0,
                             "description": "A positive integer representing the state of the arm/manipulator."
                           },
                           "hold_time": { "$ref": "#/definitions/hold_time" },
