@@ -24,7 +24,6 @@ public:
 private:
   std::filesystem::path filePath;
   std::queue<Task> mission;
-  bool validateMissionJSON(nlohmann::json::reference jsonData);
   Position makePositionFromJSON(nlohmann::json::reference jsonData);
   void copyQueue(const std::queue<Task>& other);
 };

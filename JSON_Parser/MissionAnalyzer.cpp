@@ -1,10 +1,15 @@
 #include "MissionAnalyzer.hpp"
+#include "JsonHelper.hpp"
 #include <fstream>
 #include <stdexcept>
+using namespace nlohmann;
+using namespace nlohmann::json_schema;
+namespace fs = std::filesystem;
 
 MissionAnalyzer::MissionAnalyzer() = default;
 
-MissionAnalyzer::MissionAnalyzer(const MissionAnalyzer& other) {
+MissionAnalyzer::MissionAnalyzer(const MissionAnalyzer &other)
+{
     filePath = other.filePath;
     copyQueue(other.mission);
 }
@@ -12,25 +17,31 @@ MissionAnalyzer::MissionAnalyzer(const MissionAnalyzer& other) {
 MissionAnalyzer::MissionAnalyzer(std::filesystem::path filePath)
     : filePath(std::move(filePath)) {}
 
-MissionAnalyzer& MissionAnalyzer::operator=(const MissionAnalyzer& other) {
-    if (this != &other) {
+MissionAnalyzer &MissionAnalyzer::operator=(const MissionAnalyzer &other)
+{
+    if (this != &other)
+    {
         filePath = other.filePath;
         copyQueue(other.mission);
     }
     return *this;
 }
 
-void MissionAnalyzer::copyQueue(const std::queue<Task>& other) {
+void MissionAnalyzer::copyQueue(const std::queue<Task> &other)
+{
     std::queue<Task> tmp = other;
     mission = {};
-    while (!tmp.empty()) {
+    while (!tmp.empty())
+    {
         mission.push(tmp.front());
         tmp.pop();
     }
 }
 
-Position MissionAnalyzer::makePositionFromJSON(nlohmann::json::reference jsonData) {
-    if (!jsonData.is_array() || jsonData.size() != 6) {
+Position MissionAnalyzer::makePositionFromJSON(nlohmann::json::reference jsonData)
+{
+    if (!jsonData.is_array() || jsonData.size() != 6)
+    {
         throw std::runtime_error("Position must be an array of exactly 6 numbers.");
     }
     return Position(
@@ -39,42 +50,26 @@ Position MissionAnalyzer::makePositionFromJSON(nlohmann::json::reference jsonDat
         jsonData[2].get<double>(),
         jsonData[3].get<double>(),
         jsonData[4].get<double>(),
-        jsonData[5].get<double>()
-    );
+        jsonData[5].get<double>());
 }
 
-void MissionAnalyzer::parseJSONForMission() {
-    std::ifstream inFile(filePath);
-    if (!inFile.is_open()) {
-        throw std::runtime_error("Could not open mission file: " + filePath.string());
-    }
+void MissionAnalyzer::parseJSONForMission()
+{
+    nlohmann::json missionJson = load_json_from_file(filePath);
 
-    nlohmann::json jsonData;
-    inFile >> jsonData;
-
-    if (!jsonData.is_array()) {
-        throw std::runtime_error("Top-level JSON must be an array of tasks.");
-    }
-
-    for (auto& taskJson : jsonData) {
+    validate_with_detailed_errors(missionJson, filePath.filename().string());
+    // The tasks array
+    nlohmann::json tasks = missionJson["tasks"];
+    for(auto& taskJson : tasks) {
         Task task;
-        task.name = taskJson.at("name").get<std::string>();
-
-        if (!taskJson.contains("steps") || !taskJson["steps"].is_array()) {
-            throw std::runtime_error("Task \"" + task.name + "\" must contain a 'steps' array.");
-        }
-
-        for (auto& stepJson : taskJson["steps"]) {
+        task.name = taskJson["name"];
+        for (auto& stepJson : taskJson) {
             Step step;
-
-            std::string type = stepJson.at("type").get<std::string>();
-
-            // Waypoint / Vision / Manipulation may have position
+            std::string taskType = stepJson["type"];
             if (stepJson.contains("position")) {
                 Position pos = makePositionFromJSON(stepJson["position"]);
                 step.WaypointPointer = std::make_shared<Position>(pos);
             }
-
             // Hold_time
             if (stepJson.contains("hold_time")) {
                 double holdTime = stepJson["hold_time"].get<double>();
@@ -82,31 +77,32 @@ void MissionAnalyzer::parseJSONForMission() {
             }
 
             // MaxTime
-            if (stepJson.contains("maxtime")) {
-                step.MaxTime = stepJson["maxtime"].get<unsigned int>();
+            if (stepJson.contains("max_time")) {
+                step.MaxTime = stepJson["max_time"].get<unsigned int>();
             }
 
             // Vision command
-            if (type == "vision" && stepJson.contains("vision_command")) {
+            if (taskType == "vision" && stepJson.contains("vision_command")) {
                 std::string cmd = stepJson["vision_command"].get<std::string>();
                 step.VisionINTCommand_Serviced = std::make_pair(cmd, false);
             }
 
             // Manipulation command
-            if (type == "manipulation" && stepJson.contains("manipulation_command")) {
+            if (taskType == "manipulation" && stepJson.contains("manipulation_command")) {
                 int cmd = stepJson["manipulation_command"].get<int>();
                 step.ManipulationCodeandStatus = std::make_pair(cmd, false);
             }
 
             task.steps_queue.push(step);
         }
-
         mission.push(task);
     }
 }
 
-Task MissionAnalyzer::popNextTask() {
-    if (mission.empty()) {
+Task MissionAnalyzer::popNextTask()
+{
+    if (mission.empty())
+    {
         throw std::runtime_error("No more tasks in mission queue.");
     }
     Task next = mission.front();
@@ -114,6 +110,7 @@ Task MissionAnalyzer::popNextTask() {
     return next;
 }
 
-bool MissionAnalyzer::allTasksComplete() {
+bool MissionAnalyzer::allTasksComplete()
+{
     return mission.empty();
 }
