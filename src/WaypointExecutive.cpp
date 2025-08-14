@@ -257,7 +257,7 @@ void WaypointExecutive::VisionDetector(
 }
 void WaypointExecutive::PositionCallback(
     const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
-  // make this more efficent.
+  // make this more efficient.
   CurrentPositionPtr =
       std::make_shared<Position>(msg->data[0], msg->data[1], msg->data[2],
                                  msg->data[3], msg->data[4], msg->data[5]);
