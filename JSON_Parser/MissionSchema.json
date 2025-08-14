@@ -27,51 +27,86 @@
             "items": {
               "description": "A step object - can be of type vision, waypoint, wait, or manipulation",
               "allOf": [
-                { "$ref": "#/definitions/base_step" },
+                {
+                  "$ref": "#/definitions/base_step"
+                },
                 {
                   "if": {
-                    "properties": { "type": { "const": "waypoint" } }
+                    "properties": {
+                      "type": {
+                        "const": "waypoint"
+                      }
+                    }
                   },
                   "then": {
                     "properties": {
-                      "type": { "const": "waypoint" },
-                      "position": { "$ref": "#/definitions/position" },
-                      "hold_time": { "$ref": "#/definitions/hold_time" },
-                      "max_time": { "$ref": "#/definitions/max_time" }
+                      "type": {
+                        "const": "waypoint"
+                      },
+                      "position": {
+                        "$ref": "#/definitions/position"
+                      },
+                      "hold_time": {
+                        "$ref": "#/definitions/hold_time"
+                      },
+                      "max_time": {
+                        "$ref": "#/definitions/max_time"
+                      }
                     },
-                    "required": ["position"],
+                    "required": [
+                      "position"
+                    ],
                     "additionalProperties": false
                   }
                 },
                 {
                   "if": {
-                    "properties": { "type": { "const": "vision" } }
+                    "properties": {
+                      "type": {
+                        "const": "vision"
+                      }
+                    }
                   },
                   "then": {
                     "allOf": [
                       {
                         "properties": {
-                          "type": { 
+                          "type": {
                             "const": "vision",
                             "description": "Step type identifier"
                           },
-                          "position": { "$ref": "#/definitions/position" },
+                          "position": {
+                            "$ref": "#/definitions/position"
+                          },
                           "vision_command": {
                             "type": "string",
                             "description": "The vision command to run. #TODO more description later"
                           },
-                          "hold_time": { "$ref": "#/definitions/hold_time" },
-                          "max_time": { "$ref": "#/definitions/max_time" }
+                          "hold_time": {
+                            "$ref": "#/definitions/hold_time"
+                          },
+                          "max_time": {
+                            "$ref": "#/definitions/max_time"
+                          }
                         },
-                        "required": ["vision"],
+                        "required": [
+                          "vision_command",
+                          "hold_time"
+                        ],
                         "additionalProperties": false
                       },
                       {
                         "if": {
-                          "not": { "required": ["position"] }
+                          "not": {
+                            "required": [
+                              "position"
+                            ]
+                          }
                         },
                         "then": {
-                          "required": ["hold_time"]
+                          "required": [
+                            "hold_time"
+                          ]
                         }
                       }
                     ]
@@ -79,34 +114,52 @@
                 },
                 {
                   "if": {
-                    "properties": { "type": { "const": "manipulation" } }
+                    "properties": {
+                      "type": {
+                        "const": "manipulation"
+                      }
+                    }
                   },
                   "then": {
                     "allOf": [
                       {
                         "properties": {
-                          "type": { 
+                          "type": {
                             "const": "manipulation",
                             "description": "Step type identifier"
                           },
-                          "position": { "$ref": "#/definitions/position" },
+                          "position": {
+                            "$ref": "#/definitions/position"
+                          },
                           "manipulation_command": {
                             "type": "integer",
                             "minimum": 0,
                             "description": "A positive integer representing the state of the arm/manipulator."
                           },
-                          "hold_time": { "$ref": "#/definitions/hold_time" },
-                          "max_time": { "$ref": "#/definitions/max_time" }
+                          "hold_time": {
+                            "$ref": "#/definitions/hold_time"
+                          },
+                          "max_time": {
+                            "$ref": "#/definitions/max_time"
+                          }
                         },
-                        "required": ["manipulation_command"],
+                        "required": [
+                          "manipulation_command"
+                        ],
                         "additionalProperties": false
                       },
                       {
                         "if": {
-                          "not": { "required": ["position"] }
+                          "not": {
+                            "required": [
+                              "position"
+                            ]
+                          }
                         },
                         "then": {
-                          "required": ["hold_time"]
+                          "required": [
+                            "hold_time"
+                          ]
                         }
                       }
                     ]
@@ -114,11 +167,15 @@
                 },
                 {
                   "if": {
-                    "properties": { "type": { "const": "wait" } }
+                    "properties": {
+                      "type": {
+                        "const": "wait"
+                      }
+                    }
                   },
                   "then": {
                     "properties": {
-                      "type": { 
+                      "type": {
                         "const": "wait",
                         "description": "Step type identifier"
                       },
@@ -128,7 +185,9 @@
                         "description": "The time to wait"
                       }
                     },
-                    "required": ["time"],
+                    "required": [
+                      "time"
+                    ],
                     "additionalProperties": false
                   }
                 }
@@ -136,26 +195,32 @@
             }
           }
         },
-        "required": ["name", "steps"],
+        "required": [
+          "name",
+          "steps"
+        ],
         "additionalProperties": false
       }
     }
   },
-  "required": ["tasks"],
+  "required": [
+    "tasks"
+  ],
   "additionalProperties": false,
   "definitions": {
     "position": {
       "description": "6-element position array: [x, y, z, roll, pitch, yaw]. Supports floating-point.",
       "type": "array",
-      "items": { "type": "number" },
+      "items": {
+        "type": "number"
+      },
       "minItems": 6,
       "maxItems": 6
     },
     "hold_time": {
       "description": "If position is a member of this task. If waypoint is not a member of this task, do the task for this long.",
       "type": "number",
-      "minimum": 0,
-      "exclusiveMinimum": true
+      "minimum": 0
     },
     "max_time": {
       "description": "Maximum amount of time that a task can run for",
@@ -168,11 +233,18 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["vision", "waypoint", "wait", "manipulation"],
+          "enum": [
+            "vision",
+            "waypoint",
+            "wait",
+            "manipulation"
+          ],
           "description": "The type of step - can be vision, waypoint, wait, or manipulation"
         }
       },
-      "required": ["type"]
+      "required": [
+        "type"
+      ]
     }
   }
 }
