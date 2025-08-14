@@ -191,7 +191,8 @@ void WaypointExecutive::ServiceINTofStep() {
     CurrentStep.VisionINTCommand_Serviced.value().second = true;
   }
   if (ServiceINT.BINS_SPOTTED) {
-    // Get Waypoint or coordinate from Vision.
+    // Get Waypoint or coordinate from Vision
+   	CurrentStep.VisionINTCommand_Serviced.value().second = true;
     SendCurrentWaypoint();
   }
   if (ServiceINT.TriggerManipSendCode) {
