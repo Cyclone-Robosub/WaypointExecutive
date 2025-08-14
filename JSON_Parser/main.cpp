@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
-#include "MissionAnalyser.hpp"
+#include "MissionAnalyzer.hpp"
 
 int main() {
-    auto analyser = MissionAnalyser("MissionPath.JSON");
+    auto analyser = MissionAnalyzer("MissionPath.JSON");
     analyser.parseJSONForMission();
 
     

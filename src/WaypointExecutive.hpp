@@ -1,4 +1,4 @@
-#include "../JSON_Parser/MissionAnalyser.hpp"
+#include "../JSON_Parser/MissionAnalyzer.hpp"
 #include "Task.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/bool.hpp"
@@ -23,7 +23,7 @@ Notes:
 or checked could be never attended to as the order in which the ServiceINTofTask
 or services all the interrupts specifies priority. This could be solved by a
 queue of Interrupts, but then there is a loss of actual priority. Thus a data
-structure of the interrupts, perferably a max heap, that sorts itself is a
+structure of the interrupts, preferably a max heap, that sorts itself is a
 solution. Multithreading is another solution.
 
 
@@ -36,7 +36,7 @@ and Manipulation should solve this implementation problem.
 ///@TODO:
 // Tasks to Complete
 // Interrupt Handling
-//    Controller vs Task Interrupts Handling and Implementaion Location -> Done
+//    Controller vs Task Interrupts Handling and Implementation Location -> Done
 //    Then Finish up CheckINTofStep and ServiceINTofStep -> Done
 //    Upload Design Image -> Not Needed.
 // ROS2
@@ -64,7 +64,7 @@ public:
   WaypointExecutive(std::filesystem::path givenMissionPathPath)
       : Node("WaypointExecutiveNode") {
        
-   MissionQueue = MissionAnalyser(givenMissionPathPath);
+   MissionQueue = MissionAnalyzer(givenMissionPathPath);
     SetupROS();
     CurrentPositionPtr = std::make_shared<Position>();
   }
@@ -116,7 +116,7 @@ friend class WaypointExecutiveTest;
   void PositionCallback(const std_msgs::msg::Float32MultiArray::SharedPtr msg);
   // Make This Pair or Class to save the interrupt details.
   bool StopWorking{false};
-  MissionAnalyser MissionQueue;
+  MissionAnalyzer MissionQueue;
   bool MetPositionandTimeReq();
   void EndReport(Interrupts interrupt = Interrupts());
 };

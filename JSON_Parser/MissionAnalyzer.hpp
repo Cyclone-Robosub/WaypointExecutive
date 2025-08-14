@@ -1,25 +1,23 @@
 #ifndef MISSION_ANALYSER_HPP
 #define MISSION_ANALYSER_HPP
 
-
 #include "../crs_common/position/position.hpp"
-#include "../lib/JSON/Json.hpp"
-#include "../src/Task.hpp"
+#include <nlohmann/json.hpp>
 #include <queue>
 #include <string>
 #include <filesystem>
+#include "Task.hpp"
 
-struct Task;
-class MissionAnalyser {
+class MissionAnalyzer {
 public:
-  MissionAnalyser();
-  MissionAnalyser(const MissionAnalyser& other); 
-  MissionAnalyser(std::string filePath);
-  MissionAnalyser(std::filesystem::path filePath);
+  MissionAnalyzer();
+  MissionAnalyzer(const MissionAnalyzer& other); 
+  MissionAnalyzer(std::string filePath);
+  MissionAnalyzer(std::filesystem::path filePath);
   void parseJSONForMission();
   Task popNextTask();
   bool allTasksComplete();
-  MissionAnalyser& operator=(const MissionAnalyser& other);
+  MissionAnalyzer& operator=(const MissionAnalyzer& other);
 private:
   std::filesystem::path filePath;
   std::queue<Task> mission;

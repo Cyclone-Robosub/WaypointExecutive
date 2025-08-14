@@ -2,7 +2,7 @@
 #define TASK_HPP
 
 #include "../crs_common/position/position.hpp"
-#include "../JSON_Parser/MissionAnalyser.hpp"
+#include "../JSON_Parser/MissionAnalyzer.hpp"
 #include <chrono>
 #include <memory>
 #include <optional>

@@ -1,22 +1,21 @@
-#include "MissionAnalyser.hpp"
+#include "MissionAnalyzer.hpp"
 #include <fstream>
 #include <stdexcept>
-#include <nlohmann/json.hpp> // assuming ../lib/JSON/Json.hpp brings this in
 
-MissionAnalyser::MissionAnalyser() = default;
+MissionAnalyzer::MissionAnalyzer() = default;
 
-MissionAnalyser::MissionAnalyser(const MissionAnalyser& other) {
+MissionAnalyzer::MissionAnalyzer(const MissionAnalyzer& other) {
     filePath = other.filePath;
     copyQueue(other.mission);
 }
 
-MissionAnalyser::MissionAnalyser(std::string filePath)
+MissionAnalyzer::MissionAnalyzer(std::string filePath)
     : filePath(std::move(filePath)) {}
 
-MissionAnalyser::MissionAnalyser(std::filesystem::path filePath)
+MissionAnalyzer::MissionAnalyzer(std::filesystem::path filePath)
     : filePath(std::move(filePath)) {}
 
-MissionAnalyser& MissionAnalyser::operator=(const MissionAnalyser& other) {
+MissionAnalyzer& MissionAnalyzer::operator=(const MissionAnalyzer& other) {
     if (this != &other) {
         filePath = other.filePath;
         copyQueue(other.mission);
@@ -24,7 +23,7 @@ MissionAnalyser& MissionAnalyser::operator=(const MissionAnalyser& other) {
     return *this;
 }
 
-void MissionAnalyser::copyQueue(const std::queue<Task>& other) {
+void MissionAnalyzer::copyQueue(const std::queue<Task>& other) {
     std::queue<Task> tmp = other;
     mission = {};
     while (!tmp.empty()) {
@@ -33,7 +32,7 @@ void MissionAnalyser::copyQueue(const std::queue<Task>& other) {
     }
 }
 
-Position MissionAnalyser::makePositionFromJSON(nlohmann::json::reference jsonData) {
+Position MissionAnalyzer::makePositionFromJSON(nlohmann::json::reference jsonData) {
     if (!jsonData.is_array() || jsonData.size() != 6) {
         throw std::runtime_error("Position must be an array of exactly 6 numbers.");
     }
@@ -47,7 +46,7 @@ Position MissionAnalyser::makePositionFromJSON(nlohmann::json::reference jsonDat
     );
 }
 
-void MissionAnalyser::parseJSONForMission() {
+void MissionAnalyzer::parseJSONForMission() {
     std::ifstream inFile(filePath);
     if (!inFile.is_open()) {
         throw std::runtime_error("Could not open mission file: " + filePath.string());
@@ -109,7 +108,7 @@ void MissionAnalyser::parseJSONForMission() {
     }
 }
 
-Task MissionAnalyser::popNextTask() {
+Task MissionAnalyzer::popNextTask() {
     if (mission.empty()) {
         throw std::runtime_error("No more tasks in mission queue.");
     }
@@ -118,6 +117,6 @@ Task MissionAnalyser::popNextTask() {
     return next;
 }
 
-bool MissionAnalyser::allTasksComplete() {
+bool MissionAnalyzer::allTasksComplete() {
     return mission.empty();
 }

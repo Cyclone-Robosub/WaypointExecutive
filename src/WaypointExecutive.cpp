@@ -5,7 +5,8 @@
 #include <memory>
 #include <regex>
 
-#include "../lib/JSON/Json.hpp"
+#include <nlohmann/json.hpp>
+
 enum class ControllerStatus{
   COMPLETED_TASKS = 0,
   SOC_IS_LOW = 1
