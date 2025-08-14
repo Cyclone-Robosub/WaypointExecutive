@@ -4,6 +4,7 @@
 #include "../crs_common/position/position.hpp"
 #include "Task.hpp"
 #include <nlohmann/json.hpp>
+#include <nlohmann/json-schema.hpp>
 #include <queue>
 #include <string>
 #include <filesystem>
@@ -23,6 +24,7 @@ public:
 private:
   std::filesystem::path filePath;
   std::queue<Task> mission;
+  bool validateMissionJSON(nlohmann::json::reference jsonData);
   Position makePositionFromJSON(nlohmann::json::reference jsonData);
   void copyQueue(const std::queue<Task>& other);
 };
