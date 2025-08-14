@@ -14,31 +14,46 @@ find_package(geometry_msgs REQUIRED)
 
 # Add include directories
 include_directories(src)
-include_directories(src/JSON_Parser)
+include_directories(lib/json-schema-validator)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(EXPORT_COMPILE_COMMANDS ON)
 
-# find_package(nlohmann_json_schema_validator REQUIRED)
-add_subdirectory("lib/JSON/json-schema-validator")
-add_executable(waypoint_executive
+add_executable(${PROJECT_NAME}
   src/mainWaypoint.cpp
   src/WaypointExecutive.cpp
   src/Task.cpp
   JSON_Parser/MissionAnalyser.cpp
   crs_common/position/position.cpp
 )
+# TODO
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json_schema_validator)
 
-target_link_libraries(waypoint_executive nlohmann_json_schema_validator)
 
-ament_target_dependencies(waypoint_executive
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(${PROJECT_NAME}_test test/test_waypoint.cpp)
+  target_include_directories(${PROJECT_NAME}_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_test PRIVATE nlohmann_json_schema_validator)
+endif()
+
+ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   std_msgs
   geometry_msgs
 )
 
+ament_target_dependencies(${PROJECT_NAME}_test
+    rclcpp
+    std_msgs
+    geometry_msgs
+  )
+
 install(TARGETS
-  waypoint_executive
+  ${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -57,18 +72,13 @@ install(DIRECTORY
 )
 
 ament_add_gtest(waypoint_test
-    test/test_waypoint.cpp
+  test/test_waypoint.cpp
   src/WaypointExecutive.cpp
   src/Task.cpp
   JSON_Parser/MissionAnalyser.cpp
   crs_common/position/position.cpp
   )
-ament_target_dependencies(waypoint_test
-    rclcpp
-    std_msgs
-    geometry_msgs
-    nlohmann_json_schema_validator
-  )
-target_link_libraries(waypoint_executive PRIVATE nlohmann_json_schema_validator)
-target_link_libraries(waypoint_test PRIVATE nlohmann_json_schema_validator)
+
+# target_link_libraries(waypoint_executive PRIVATE nlohmann_json_schema_validator)
+# target_link_libraries(waypoint_test PRIVATE nlohmann_json_schema_validator)
 ament_package()
