@@ -9,9 +9,6 @@ MissionAnalyzer::MissionAnalyzer(const MissionAnalyzer& other) {
     copyQueue(other.mission);
 }
 
-MissionAnalyzer::MissionAnalyzer(std::string filePath)
-    : filePath(std::move(filePath)) {}
-
 MissionAnalyzer::MissionAnalyzer(std::filesystem::path filePath)
     : filePath(std::move(filePath)) {}
 

@@ -19,7 +19,9 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 # Add include directories
-include_directories(src JSON_Parser)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/JSON_Parser)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(lib/json-schema-validator)
 include_directories(lib/nlohmann_json)
 
@@ -36,7 +38,7 @@ add_executable(${PROJECT_NAME}
   crs_common/position/position.cpp
 )
 
-# Link libraries to main executable (using consistent PRIVATE signature)
+# Link libraries to main executable (plain signature)
 target_link_libraries(${PROJECT_NAME}
   nlohmann_json::nlohmann_json
   nlohmann_json_schema_validator
@@ -62,13 +64,7 @@ if(BUILD_TESTING)
     crs_common/position/position.cpp
   )
   
-  # Set target properties for the test (fixed syntax)
-  target_include_directories(${PROJECT_NAME}_test PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-  )
-  
-  # Link libraries to test executable (using consistent PRIVATE signature)
+  # Link libraries to test executable (plain signature)
   target_link_libraries(${PROJECT_NAME}_test
     nlohmann_json::nlohmann_json
     nlohmann_json_schema_validator

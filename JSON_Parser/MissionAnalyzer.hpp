@@ -1,5 +1,5 @@
-#ifndef MISSION_ANALYSER_HPP
-#define MISSION_ANALYSER_HPP
+#ifndef MISSION_ANALYZER_HPP
+#define MISSION_ANALYZER_HPP
 
 #include "../crs_common/position/position.hpp"
 #include <nlohmann/json.hpp>
@@ -12,7 +12,6 @@ class MissionAnalyzer {
 public:
   MissionAnalyzer();
   MissionAnalyzer(const MissionAnalyzer& other); 
-  MissionAnalyzer(std::string filePath);
   MissionAnalyzer(std::filesystem::path filePath);
   void parseJSONForMission();
   Task popNextTask();
