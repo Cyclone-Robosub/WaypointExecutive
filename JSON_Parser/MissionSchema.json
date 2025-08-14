@@ -1,10 +1,137 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/robot-mission-path.schema.json",
-  "title": "Robot Mission Path Schema",
-  "description": "A schema for defining robot mission path including waypoint, vision, manipulation, and wait operations. Each operation is defined as a 'step'.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/robot-tasks.schema.json",
+  "title": "Robot Task List",
+  "description": "A schema for defining robot tasks with named tasks containing steps for waypoint, vision, manipulation, and wait operations",
   "type": "object",
-  "$defs": {
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to the JSON schema"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the task"
+          },
+          "steps": {
+            "type": "array",
+            "description": "A array of steps",
+            "minItems": 1,
+            "items": {
+              "allOf": [
+                { "$ref": "#/definitions/step" },
+                {
+                  "if": {
+                    "properties": { "type": { "const": "waypoint" } }
+                  },
+                  "then": {
+                    "properties": {
+                      "type": { "const": "waypoint" },
+                      "position": { "$ref": "#/definitions/position" },
+                      "hold_time": { "$ref": "#/definitions/hold_time" },
+                      "max_time": { "$ref": "#/definitions/max_time" }
+                    },
+                    "required": ["position"],
+                    "additionalProperties": false
+                  }
+                },
+                {
+                  "if": {
+                    "properties": { "type": { "const": "vision" } }
+                  },
+                  "then": {
+                    "allOf": [
+                      {
+                        "properties": {
+                          "type": { "const": "vision" },
+                          "position": { "$ref": "#/definitions/position" },
+                          "vision": {
+                            "type": "string",
+                            "description": "The vision command to run. #TODO more description later"
+                          },
+                          "hold_time": { "$ref": "#/definitions/hold_time" },
+                          "max_time": { "$ref": "#/definitions/max_time" }
+                        },
+                        "required": ["vision"],
+                        "additionalProperties": false
+                      },
+                      {
+                        "if": {
+                          "not": { "required": ["position"] }
+                        },
+                        "then": {
+                          "required": ["hold_time"]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": { "type": { "const": "manipulation" } }
+                  },
+                  "then": {
+                    "allOf": [
+                      {
+                        "properties": {
+                          "type": { "const": "manipulation" },
+                          "position": { "$ref": "#/definitions/position" },
+                          "manipulation_command": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "description": "A positive integer representing the state of the arm/manipulator."
+                          },
+                          "hold_time": { "$ref": "#/definitions/hold_time" },
+                          "max_time": { "$ref": "#/definitions/max_time" }
+                        },
+                        "required": ["manipulation_command"],
+                        "additionalProperties": false
+                      },
+                      {
+                        "if": {
+                          "not": { "required": ["position"] }
+                        },
+                        "then": {
+                          "required": ["hold_time"]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": { "type": { "const": "wait" } }
+                  },
+                  "then": {
+                    "properties": {
+                      "type": { "const": "wait" },
+                      "time": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "The time to wait"
+                      }
+                    },
+                    "required": ["time"],
+                    "additionalProperties": false
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "required": ["name", "steps"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["tasks"],
+  "additionalProperties": false,
+  "definitions": {
     "position": {
       "description": "6-element position array: [x, y, z, roll, pitch, yaw]. Supports floating-point.",
       "type": "array",
@@ -13,19 +140,19 @@
       "maxItems": 6
     },
     "hold_time": {
-      "description": "If task is 'waypoint' and robot deemed itself at that position specified, robot will hold at that position for the time specified in seconds. Otherwise, wait at the current position for the time specified.",
+      "description": "If position is a member of this task. If waypoint is not a member of this task, do the task for this long.",
       "type": "number",
       "minimum": 0,
       "exclusiveMinimum": true
     },
     "max_time": {
-      "description": "Maximum amount of time that a step can run for",
+      "description": "Maximum amount of time that a task can run for",
       "type": "integer",
       "minimum": 1
     },
-    "base_task": {
+    "step": {
       "type": "object",
-      "description": "A possible task for the robot to run.",
+      "description": "A step that the robot can execute",
       "properties": {
         "type": {
           "type": "string",
@@ -34,86 +161,5 @@
       },
       "required": ["type"]
     }
-  },
-  "properties": {
-    "tasks": {
-      "type": "array",
-      "items": {
-        "allOf": [
-          { "$ref": "#/$defs/base_task" },
-          {
-            "if": {
-              "properties": { "type": { "const": "waypoint" } }
-            },
-            "then": {
-              "properties": {
-                "type": { "const": "waypoint" },
-                "position": { "$ref": "#/$defs/position" },
-                "hold_time": { "$ref": "#/$defs/hold_time" },
-                "max_time": { "$ref": "#/$defs/max_time" }
-              },
-              "required": ["position"],
-              "additionalProperties": false
-            }
-          },
-          {
-            "if": {
-              "properties": { "type": { "const": "vision" } }
-            },
-            "then": {
-              "properties": {
-                "type": { "const": "vision" },
-                "position": { "$ref": "#/$defs/position" },
-                "vision": {
-                  "type": "string",
-                  "description": "The vision command to run. #TODO more description later"
-                },
-                "hold_time": { "$ref": "#/$defs/hold_time" },
-                "max_time": { "$ref": "#/$defs/max_time" }
-              },
-              "required": ["vision"],
-              "additionalProperties": false
-            }
-          },
-          {
-            "if": {
-              "properties": { "type": { "const": "manipulation" } }
-            },
-            "then": {
-              "properties": {
-                "type": { "const": "manipulation" },
-                "manipulation_command": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "description": "A positive integer representing the state of the arm/manipulator."
-                },
-                "hold_time": { "$ref": "#/$defs/hold_time" },
-                "max_time": { "$ref": "#/$defs/max_time" }
-              },
-              "required": ["manipulation_command"],
-              "additionalProperties": false
-            }
-          },
-          {
-            "if": {
-              "properties": { "type": { "const": "wait" } }
-            },
-            "then": {
-              "properties": {
-                "type": { "const": "wait" },
-                "time": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "description": "The time to wait"
-                }
-              },
-              "required": ["time"],
-              "additionalProperties": false
-            }
-          }
-        ]
-      }
-    }
-  },
-  "required": ["tasks"]
+  }
 }
