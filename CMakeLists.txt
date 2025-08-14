@@ -19,7 +19,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(EXPORT_COMPILE_COMMANDS ON)
 
-find_package(nlohmann_json_schema_validator REQUIRED)
+# find_package(nlohmann_json_schema_validator REQUIRED)
+add_subdirectory("lib/JSON/json-schema-validator")
 add_executable(waypoint_executive
   src/mainWaypoint.cpp
   src/WaypointExecutive.cpp
@@ -27,6 +28,8 @@ add_executable(waypoint_executive
   JSON_Parser/MissionAnalyser.cpp
   crs_common/position/position.cpp
 )
+
+target_link_libraries(waypoint_executive nlohmann_json_schema_validator)
 
 ament_target_dependencies(waypoint_executive
   rclcpp
@@ -63,8 +66,9 @@ ament_add_gtest(waypoint_test
 ament_target_dependencies(waypoint_test
     rclcpp
     std_msgs
-  geometry_msgs
+    geometry_msgs
+    nlohmann_json_schema_validator
   )
-target_link_libraries(waypoint_executive nlohmann_json_schema_validator)
-target_link_libraries(waypoint_test nlohmann_json_schema_validator)
+target_link_libraries(waypoint_executive PRIVATE nlohmann_json_schema_validator)
+target_link_libraries(waypoint_test PRIVATE nlohmann_json_schema_validator)
 ament_package()
