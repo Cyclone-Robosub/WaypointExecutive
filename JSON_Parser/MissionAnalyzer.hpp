@@ -2,11 +2,14 @@
 #define MISSION_ANALYZER_HPP
 
 #include "../crs_common/position/position.hpp"
+#include "Task.hpp"
 #include <nlohmann/json.hpp>
 #include <queue>
 #include <string>
 #include <filesystem>
-#include "Task.hpp"
+
+// Forward declaration
+struct Task;
 
 class MissionAnalyzer {
 public:

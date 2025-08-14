@@ -12,6 +12,7 @@
 
 typedef std::shared_ptr<Position> waypointPtr;
 
+struct MissionAnalyzer;
 struct Step {
   waypointPtr WaypointPointer;
   std::optional<std::pair<std::string, bool>> VisionINTCommand_Serviced;
