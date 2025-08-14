@@ -1,141 +1,123 @@
 #include "MissionAnalyser.hpp"
 #include <fstream>
-#include <iostream>
-#include <filesystem>
-using json = nlohmann::json;
+#include <stdexcept>
+#include <nlohmann/json.hpp> // assuming ../lib/JSON/Json.hpp brings this in
 
-MissionAnalyser::MissionAnalyser()
-{
-}
+MissionAnalyser::MissionAnalyser() = default;
 
-MissionAnalyser::MissionAnalyser(std::string filePath) : filePath(filePath) {}
-MissionAnalyser::MissionAnalyser(std::filesystem::path filePath) : filePath(filePath) {}
-MissionAnalyser::MissionAnalyser(const MissionAnalyser& other) : filePath(other.filePath) {
+MissionAnalyser::MissionAnalyser(const MissionAnalyser& other) {
+    filePath = other.filePath;
     copyQueue(other.mission);
 }
-Position MissionAnalyser::makePositionFromJSON(json::reference jsonData) {
-    auto posArray = jsonData["position"].get<std::array<float, 6>>();
-    return Position(posArray);
-}
 
-void MissionAnalyser::parseJSONForMission() {
-    // Open and read the JSON file
-    std::ifstream file(filePath);
-    if(!file.is_open()){
-        throw std::runtime_error("The Mission path file did not open"); 
-    }
-    json missionJson;
-    file >> missionJson;
-    
-    // Clear any existing mission tasks
-    while (!allTasksComplete()) {
-        mission.pop();
-    }
-    
-    for (auto& taskJson : missionJson["tasks"]) { // TODO: Not sure when to set interruptable to true, so it's always false...
-        for (auto it = taskJson.begin(); it != taskJson.end(); it++) {
-            Task newTask;
-            newTask.name = it.key(); // iterator key is name of steps list from JSON (i.e. "Octagon")
-            
-            for (auto& stepJson : it.value()) { // iterator value is the list elements themselves
-                Step step;
-                                
-                if (stepJson.contains("wait")) {
-                    step.WaypointPointer = nullptr; // No position change. TODO: Maybe make waypoint optional?
-                    double waitTime = stepJson["wait"].get<double>();
-                    step.HoldWaypTime_TimeElapsed = std::make_pair(waitTime, 0.0);
-                }
-                else if (stepJson.contains("set_control_mode")) { // not sure if this should be handled seperately. What does changing control mode involve?
-                    std::string mode = stepJson["set_control_mode"].get<std::string>();
-                    if (mode == "vision") {
-                        step.VisionINTCommand_Serviced = std::make_pair("DROP_INTO_BINS", false);
-                    }
-                }
-                else if (stepJson.contains("waypoint")) {
-                    json::reference waypointData = stepJson["waypoint"];
+MissionAnalyser::MissionAnalyser(std::string filePath)
+    : filePath(std::move(filePath)) {}
 
-                    step.WaypointPointer = std::make_shared<Position>(makePositionFromJSON(waypointData));
-                                        
-                    double holdTime = waypointData["hold_time"].get<double>();
-                    if (holdTime > 0) {
-                        step.HoldWaypTime_TimeElapsed = std::make_pair(holdTime, 0.0);
-                    }
-                    int maxTime = waypointData["max_time"].get<int>();
-                    if (maxTime > 0) {
-                        step.MaxTime = maxTime;
-                    }
-                }
-                else if (stepJson.contains("barrel_roll")) {
-                    json::reference rollData = stepJson["barrel_roll"];
+MissionAnalyser::MissionAnalyser(std::filesystem::path filePath)
+    : filePath(std::move(filePath)) {}
 
-                    step.WaypointPointer = std::make_shared<Position>(makePositionFromJSON(rollData));
-                                        
-                    step.doBarrelRoll = true;
-                    
-                    double holdTime = rollData["hold_time"].get<double>();
-                    if (holdTime > 0) {
-                        step.HoldWaypTime_TimeElapsed = std::make_pair(holdTime, 0.0);
-                    }
-                }
-                else if (stepJson.contains("control_signal")) {
-                    std::string signal = stepJson["control_signal"].get<std::string>();
-                    if (signal == "STOP") { //Rename "STOP"
-                        step.stopWorking = true;
-                    }
-                    // TODO: add handling for any other signals (not sure if we're going to have any others?)
-                }                    
-                newTask.steps_queue.push(step);
-            }                
-            mission.push(newTask);
-        }
-    }
-}
-
-bool MissionAnalyser::allTasksComplete() {
-    return mission.empty();
-}
-void MissionAnalyser::copyQueue(const std::queue<Task>& other) {
-    std::queue<Task> tempQueue = other; // Create a temporary copy to avoid modifying the original queue
-    while (!tempQueue.empty()) {
-        Task task = tempQueue.front();
-        tempQueue.pop();
-        // Deep copy of the task
-        Task copiedTask;
-        copiedTask.name = task.name;
-
-        std::queue<Step> tempStepQueue = task.steps_queue;
-        while (!tempStepQueue.empty()){
-            Step step = tempStepQueue.front();
-            tempStepQueue.pop();
-            Step copiedStep;
-            copiedStep.WaypointPointer = step.WaypointPointer ? std::make_shared<Position>(*step.WaypointPointer) : nullptr;
-            copiedStep.VisionINTCommand_Serviced = step.VisionINTCommand_Serviced;
-            copiedStep.isInterruptable = step.isInterruptable;
-            copiedStep.doBarrelRoll = step.doBarrelRoll;
-            copiedStep.stopWorking = step.stopWorking;
-            copiedStep.ManipulationCodeandStatus = step.ManipulationCodeandStatus;
-            copiedStep.HoldWaypTime_TimeElapsed = step.HoldWaypTime_TimeElapsed;
-            copiedStep.MaxTime = step.MaxTime;
-            copiedTask.steps_queue.push(copiedStep);
-        }
-        mission.push(copiedTask);
-    }
-}
 MissionAnalyser& MissionAnalyser::operator=(const MissionAnalyser& other) {
-    if (this != &other) { // Check for self-assignment
+    if (this != &other) {
         filePath = other.filePath;
-        // Clear the existing queue
-        std::queue<Task> empty;
-        std::swap(mission, empty);
         copyQueue(other.mission);
     }
     return *this;
 }
-Task MissionAnalyser::popNextTask() {
-    if (allTasksComplete()) {
-        return Task{}; // return empty newTask if queue is empty
+
+void MissionAnalyser::copyQueue(const std::queue<Task>& other) {
+    std::queue<Task> tmp = other;
+    mission = {};
+    while (!tmp.empty()) {
+        mission.push(tmp.front());
+        tmp.pop();
     }
-    Task nextTask = mission.front();
+}
+
+Position MissionAnalyser::makePositionFromJSON(nlohmann::json::reference jsonData) {
+    if (!jsonData.is_array() || jsonData.size() != 6) {
+        throw std::runtime_error("Position must be an array of exactly 6 numbers.");
+    }
+    return Position(
+        jsonData[0].get<double>(),
+        jsonData[1].get<double>(),
+        jsonData[2].get<double>(),
+        jsonData[3].get<double>(),
+        jsonData[4].get<double>(),
+        jsonData[5].get<double>()
+    );
+}
+
+void MissionAnalyser::parseJSONForMission() {
+    std::ifstream inFile(filePath);
+    if (!inFile.is_open()) {
+        throw std::runtime_error("Could not open mission file: " + filePath.string());
+    }
+
+    nlohmann::json jsonData;
+    inFile >> jsonData;
+
+    if (!jsonData.is_array()) {
+        throw std::runtime_error("Top-level JSON must be an array of tasks.");
+    }
+
+    for (auto& taskJson : jsonData) {
+        Task task;
+        task.name = taskJson.at("name").get<std::string>();
+
+        if (!taskJson.contains("steps") || !taskJson["steps"].is_array()) {
+            throw std::runtime_error("Task \"" + task.name + "\" must contain a 'steps' array.");
+        }
+
+        for (auto& stepJson : taskJson["steps"]) {
+            Step step;
+
+            std::string type = stepJson.at("type").get<std::string>();
+
+            // Waypoint / Vision / Manipulation may have position
+            if (stepJson.contains("position")) {
+                Position pos = makePositionFromJSON(stepJson["position"]);
+                step.WaypointPointer = std::make_shared<Position>(pos);
+            }
+
+            // Hold_time
+            if (stepJson.contains("hold_time")) {
+                double holdTime = stepJson["hold_time"].get<double>();
+                step.HoldWaypTime_TimeElapsed = std::make_pair(holdTime, 0.0);
+            }
+
+            // MaxTime
+            if (stepJson.contains("maxtime")) {
+                step.MaxTime = stepJson["maxtime"].get<unsigned int>();
+            }
+
+            // Vision command
+            if (type == "vision" && stepJson.contains("vision_command")) {
+                std::string cmd = stepJson["vision_command"].get<std::string>();
+                step.VisionINTCommand_Serviced = std::make_pair(cmd, false);
+            }
+
+            // Manipulation command
+            if (type == "manipulation" && stepJson.contains("manipulation_command")) {
+                int cmd = stepJson["manipulation_command"].get<int>();
+                step.ManipulationCodeandStatus = std::make_pair(cmd, false);
+            }
+
+            task.steps_queue.push(step);
+        }
+
+        mission.push(task);
+    }
+}
+
+Task MissionAnalyser::popNextTask() {
+    if (mission.empty()) {
+        throw std::runtime_error("No more tasks in mission queue.");
+    }
+    Task next = mission.front();
     mission.pop();
-    return nextTask;
+    return next;
+}
+
+bool MissionAnalyser::allTasksComplete() {
+    return mission.empty();
 }

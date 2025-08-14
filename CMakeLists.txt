@@ -19,6 +19,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(EXPORT_COMPILE_COMMANDS ON)
 
+find_package(nlohmann_json_schema_validator REQUIRED)
 add_executable(waypoint_executive
   src/mainWaypoint.cpp
   src/WaypointExecutive.cpp
@@ -64,5 +65,6 @@ ament_target_dependencies(waypoint_test
     std_msgs
   geometry_msgs
   )
-
+target_link_libraries(waypoint_executive nlohmann_json_schema_validator)
+target_link_libraries(waypoint_test nlohmann_json_schema_validator)
 ament_package()
