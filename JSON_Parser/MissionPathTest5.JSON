@@ -1,0 +1,16 @@
+{
+	[ // task array
+		{ // task
+			name: ,
+			[ // steps array
+				{ // step
+					type:,
+					"position"
+					hold_time
+					"maxtime"
+					"vision_command" (optional if given type "Vision")
+				}
+			]
+		}
+	]
+}
