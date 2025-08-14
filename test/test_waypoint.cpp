@@ -34,7 +34,7 @@ void publishMockPosition(const std::shared_ptr<rclcpp::Publisher<std_msgs::msg::
 
 TEST_F(WaypointExecutiveTest, StartorStopCamerasTest) {
     rclcpp::init(0, nullptr);
-    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest4.json";
+    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest5.json";
     auto WaypointExecutiveNode = std::make_shared<WaypointExecutive>(MissionPath);
     auto testNode = std::make_shared<rclcpp::Node>("test_node");
     auto executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
@@ -211,17 +211,20 @@ TEST_F(WaypointExecutiveTest, ServiceINTofStep) {
 
 TEST_F(WaypointExecutiveTest, VisionControlModeTest) {
     rclcpp::init(0, nullptr);
-    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest4.JSON";
+    std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTestVision.json";
     auto executive = std::make_shared<WaypointExecutive>(MissionPath);
     executive->MissionQueue.parseJSONForMission();
     executive->getNewMissionTask(); // Load the first task
 
     // Assuming the first task is a vision task
     executive->getNewMissionStep(); // Load the first step of the task
-
+    Interrupts generateVisionINT;
+    generateVisionINT.BINS_SPOTTED = true;
+    executive->Current_Interrupts.push(generateVisionINT);
     // Check if the vision command is properly set
+    executive->ServiceINTofStep();
     ASSERT_TRUE(executive->CurrentStep.VisionINTCommand_Serviced.has_value());
-    ASSERT_EQ(executive->CurrentStep.VisionINTCommand_Serviced->first, "DROP_INTO_BINS");
+    ASSERT_EQ(executive->CurrentStep.VisionINTCommand_Serviced->first, "BINS_SPOTTED");
     ASSERT_FALSE(executive->CurrentStep.VisionINTCommand_Serviced->second); // Ensure it's not yet serviced
 }
 
