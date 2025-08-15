@@ -272,3 +272,82 @@ Reason for Report : All Tasks are Completed.
 State of Charge was low. Check Logs of SOC
 ___________END OF NOTIFICATION ___________
 
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaafa47d060, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaafa47b490, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+A step, 0xaaaafa47c710, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaecc1f060, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaecc18730, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+State of Charge was low. Check Logs of SOC
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaefac9600, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : A step, 0xaaaaefac7a10, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+A step, 0xaaaaecc1def0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+A step, 0xaaaaefac8cb0, was skipped due to running out of time
+___________END OF NOTIFICATION ___________
+
+___________START OF NOTIFICATION__________
+Reason for Report : All Tasks are Completed.
+___________END OF NOTIFICATION ___________
+

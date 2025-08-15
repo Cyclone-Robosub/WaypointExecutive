@@ -284,7 +284,8 @@ bool WaypointExecutive::MetPositionandTimeReq() {
     }
     // We ran off course or never reached it.
     else {
-      CurrentStep.StopTimer();
+      CurrentStep.ResetTimer();
+      //maxTime
       unsigned int deltaTime = std::chrono::duration_cast<std::chrono::seconds>(
                            std::chrono::steady_clock::now() - timeInitalStep)
                            .count();

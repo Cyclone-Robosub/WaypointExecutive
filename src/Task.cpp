@@ -34,3 +34,10 @@ void Step::CalcTimer() {
     timeInital = std::chrono::steady_clock::now();
   }
 }
+
+void Step::ResetTimer(){
+  if(isTimerOn){
+    HoldWaypTime_TimeElapsed.value().second = 0.0;
+    isTimerOn = false;
+  }
+}

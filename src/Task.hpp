@@ -29,6 +29,7 @@ struct Step {
   void StartTimer();
   void StopTimer();
   void CalcTimer();
+  void ResetTimer();
   bool isTimerOn{false};
   std::chrono::steady_clock::time_point timeInital;
 };
