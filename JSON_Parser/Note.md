@@ -24,7 +24,7 @@ List of things to note:
                     "hold_time": 1,
                     "max_time": 1,
                     "vision_command: "string", 
-                    "manipulation_command": "A string".
+                    "manipulation_command": 1.
                     "time": 1.9
                 }
             ]
@@ -42,15 +42,16 @@ This section is a glossary of the the objects/properties inside of the Mission f
 - step: A object indicated by the curly braces inside fo the steps array. This. field does not have a key
 - type: A enum. You may select one of the following values: "vision", "waypoint", "wait", or "manipulation.
     - **TYPE SHOULD BE THE FIRST FIELD OF THE STEP OBJECT" so that your ide can provide completion.
-- hold_time: the amount of time in seconds to hold of the desired position once the destination is reached. The minimum is 1. 
+- hold_time: the amount of time in seconds to hold of the desired position once the destination is reached. Must be a positive non-zero value. 
     - **CAVEAT**:
     -  If the current step object is of type position or manipulation and the position array is given, then the hold_time field is mandatory. If the above is not true, it's optional
+    - If position array is missing and the step type is vision, then hold_time is required
 - max_time: the maximum amount of time that this step would run for.
     - **CAVEAT**:
-    - If max_time is not provide, defaults to 39 seconds
+    - If max_time is not provide, defaults to 39 seconds. This is set in the code and not the schema.
 - position: 6-element position array: [x, y, z, roll, pitch, yaw]. x,y,z are in meters while roll, pitch, and yaw are euler angles. Support float-point. 
 - vision_command: A string that will be processed as a "vision" command. Only available for steps with type "vision".
-- manipulation_command: A string that will be processed as a "manipulation" command. Only available for steps with type "vision".
+- manipulation_command: A integer that represents the sate of the manipulator (angle). Only available for steps with type "manipulation".
 
 
 ## Step
@@ -79,7 +80,8 @@ There are 4 types of step as described before. Here's how they look:
           "type": "vision",
           "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
           "vision_command": "BOX_DETECED",
-          "max_time": 1
+          "hold_time": 1, // If position array is missing, then hold_time is reqiured
+          "max_time": 1,
 }
 ### wait
 ```
