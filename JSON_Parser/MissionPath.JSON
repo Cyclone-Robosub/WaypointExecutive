@@ -1,49 +1,107 @@
-{  "tasks": [
+{
+  "tasks": [
     {
       "SimpleWaypointTask": [
-        {"waypoint": {
-          "position": [5, 5, 5, 0, 0, 0],
-          "hold_time": 3,
-          "max_time": 3
-        }}
+        {
+          "waypoint": {
+            "position": [
+              5,
+              5,
+              5,
+              0,
+              0,
+              0
+            ],
+            "hold_time": 3,
+            "max_time": 3
+          }
+        }
       ]
     },
     {
       "ComplexTask": [
-        {"waypoint": {
-          "position": [3, 4, 5, 1, 1, 1],
-          "hold_time": 2,
-          "max_time": 3
-        }},
-        {"set_control_mode": "manual"},
-        {"wait": 4},
-        {"waypoint": {
-          "position": [6, 7, 8, 0, 0, 0],
-          "hold_time": 1,
-          "max_time": 3
-        }},
-        {"set_control_mode": "autonomous"}
+        {
+          "waypoint": {
+            "position": [
+              3,
+              4,
+              5,
+              1,
+              1,
+              1
+            ],
+            "hold_time": 2,
+            "max_time": 3
+          }
+        },
+        {
+          "set_control_mode": "manual"
+        },
+        {
+          "wait": 4
+        },
+        {
+          "waypoint": {
+            "position": [
+              6,
+              7,
+              8,
+              0,
+              0,
+              0
+            ],
+            "hold_time": 1,
+            "max_time": 3
+          }
+        },
+        {
+          "set_control_mode": "autonomous"
+        }
       ]
     },
     {
       "VisionTask": [
-        {"set_control_mode": "vision"},
-        {"waypoint": {
-          "position": [9, 9, 9, 0, 0, 0],
-          "hold_time": 5,
-          "max_time": 3
-        }},
-        {"wait": 2}
+        {
+          "set_control_mode": "vision"
+        },
+        {
+          "waypoint": {
+            "position": [
+              9,
+              9,
+              9,
+              0,
+              0,
+              0
+            ],
+            "hold_time": 5,
+            "max_time": 3
+          }
+        },
+        {
+          "wait": 2
+        }
       ]
     },
     {
       "EmergencyStopTask": [
-        {"control_signal": "STOP"},
-        {"waypoint": {
-          "position": [0, 0, 0, 0, 0, 0],
-          "max_time": 1,
-          "hold_time": 0
-        }}
+        {
+          "control_signal": "STOP"
+        },
+        {
+          "waypoint": {
+            "position": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "max_time": 1,
+            "hold_time": 0
+          }
+        }
       ]
     }
   ]

@@ -8,7 +8,9 @@
             "includePath": [
                 "/opt/ros/jazzy/include/**",
                 "/usr/include/**",
-                "${workspaceFolder}/src"
+                "${workspaceFolder}/lib/nlohmann_json/include",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/lib/json-schema-validator/src"
             ],
             "name": "ros2",
             "intelliSenseMode": "linux-gcc-arm64",
