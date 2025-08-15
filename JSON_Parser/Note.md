@@ -48,8 +48,8 @@ This section is a glossary of the the objects/properties inside of the Mission f
 - max_time: the maximum amount of time that this step would run for.
     - **CAVEAT**:
     - If max_time is not provide, defaults to 39 seconds
-- position: 6-element position array: [x, y, z, roll, pitch, yaw]. x,y,z are in meters while rool, pitch, and yaw are euler angles. Support float-point. 
-- vision_command: A string that will be processed as a "vision" command. Only avilable for steps with type "vision".
+- position: 6-element position array: [x, y, z, roll, pitch, yaw]. x,y,z are in meters while roll, pitch, and yaw are euler angles. Support float-point. 
+- vision_command: A string that will be processed as a "vision" command. Only available for steps with type "vision".
 - manipulation_command: A string that will be processed as a "manipulation" command. Only available for steps with type "vision".
 
 
