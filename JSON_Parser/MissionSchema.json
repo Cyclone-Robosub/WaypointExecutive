@@ -12,8 +12,6 @@
     "tasks": {
       "type": "array",
       "description": "Array of task objects",
-      "minItems": 1,
-      "maxItems": 1,
       "items": {
         "type": "object",
         "description": "A task object containing a name and list of steps",
