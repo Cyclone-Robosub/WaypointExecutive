@@ -196,7 +196,7 @@
                         "description": "Step type identifier"
                       },
                       "time": {
-                        "type": "integer",
+                        "type": "number",
                         "minimum": 1,
                         "description": "The time to wait"
                       }
