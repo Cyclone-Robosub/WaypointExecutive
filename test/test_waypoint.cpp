@@ -241,8 +241,23 @@ TEST_F(WaypointExecutiveTest, ControllerRunsWithValidMission) {
 
     // Shutdown after test
     rclcpp::shutdown();
-}
+}/*
+TEST_F(WaypointExecutiveTest, ResetTimer){
+    rclcpp::init(0, nullptr);
+     std::filesystem::path MissionPath = std::filesystem::current_path().parent_path().parent_path() / "JSON_Parser" / "MissionPathTest1.JSON";
+    auto executive = std::make_shared<WaypointExecutive>(MissionPath);
 
+    executive->CurrentWaypointPtr = std::make_shared<MockPosition>(5, 5, 5, 0, 0, 0);
+    executive->CurrentPositionPtr = std::make_shared<MockPosition>(1, 1, 1, 0, 0, 0);
+    EXPECT_FALSE(executive->MetPositionandTimeReq());
+    executive->CurrentPositionPtr = std::make_shared<MockPosition>(5, 5, 5, 0, 0, 0);
+    EXPECT_TRUE(executive->MetPositionandTimeReq());
+    executive->CurrentPositionPtr = std::make_shared<MockPosition>(5, 3, 1, 0, 0, 0);
+    EXPECT_FALSE(executive->MetPositionandTimeReq());
+    //incoprate time Step.
+
+
+}*/
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

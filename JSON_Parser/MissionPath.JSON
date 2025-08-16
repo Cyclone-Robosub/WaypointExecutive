@@ -1,106 +1,58 @@
 {
+  "$schema": "./MissionSchema.json",
   "tasks": [
     {
-      "SimpleWaypointTask": [
+      "name": "Navigate to pickup zone",
+      "steps": [
         {
-          "waypoint": {
-            "position": [
-              5,
-              5,
-              5,
-              0,
-              0,
-              0
-            ],
-            "hold_time": 3,
-            "max_time": 3
-          }
+          "type": "waypoint",
+          "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
+          "hold_time": 2.5,
+          "max_time": 1
+        },
+        {
+          "type": "vision",
+          "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
+          "vision_command": "BOX_DETECED",
+          "max_time": 1
         }
       ]
     },
     {
-      "ComplexTask": [
+      "name": "Pick up object",
+      "steps": [
         {
-          "waypoint": {
-            "position": [
-              3,
-              4,
-              5,
-              1,
-              1,
-              1
-            ],
-            "hold_time": 2,
-            "max_time": 3
-          }
-        },
-        {
-          "set_control_mode": "manual"
-        },
-        {
-          "wait": 4
-        },
-        {
-          "waypoint": {
-            "position": [
-              6,
-              7,
-              8,
-              0,
-              0,
-              0
-            ],
-            "hold_time": 1,
-            "max_time": 3
-          }
-        },
-        {
-          "set_control_mode": "autonomous"
+          "type": "manipulation",
+          "manipulation_command": 1,
+          "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
+          "hold_time": 1,
+          "max_time": 2
         }
       ]
     },
     {
-      "VisionTask": [
+      "name": "Wait before delivery",
+      "steps": [
         {
-          "set_control_mode": "vision"
-        },
-        {
-          "waypoint": {
-            "position": [
-              9,
-              9,
-              9,
-              0,
-              0,
-              0
-            ],
-            "hold_time": 5,
-            "max_time": 3
-          }
-        },
-        {
-          "wait": 2
+          "type": "wait",
+          "time": 1
         }
       ]
     },
     {
-      "EmergencyStopTask": [
+      "name": "Navigate to drop-off zone",
+      "steps": [
         {
-          "control_signal": "STOP"
+          "type": "waypoint",
+          "position": [5.0, 3.0, 0.0, 0.0, 0.0, 180.0],
+          "hold_time": 1.0,
+          "max_time": 2
         },
         {
-          "waypoint": {
-            "position": [
-              0,
-              0,
-              0,
-              0,
-              0,
-              0
-            ],
-            "max_time": 1,
-            "hold_time": 0
-          }
+          "type": "manipulation",
+          "manipulation_command": 0,
+          "max_time": 2
+
         }
       ]
     }
