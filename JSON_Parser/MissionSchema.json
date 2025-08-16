@@ -173,7 +173,7 @@
                         "then": {
                           "properties": {
                             "hold_time": {
-                              "$ref": "#/definitions/hold_time_integer"
+                              "$ref": "#/definitions/hold_time"
                             }
                           }
                         }
@@ -196,7 +196,7 @@
                         "description": "Step type identifier"
                       },
                       "time": {
-                        "type": "integer",
+                        "type": "number",
                         "minimum": 1,
                         "description": "The time to wait"
                       }
@@ -238,14 +238,9 @@
       "type": "number",
       "exclusiveMinimum": 0
     },
-    "hold_time_integer": {
-      "description": "If position is a member of this task. If waypoint is not a member of this task, do the task for this long. Integer-only version for manipulation with position.",
-      "type": "integer",
-      "minimum": 1
-    },
     "max_time": {
       "description": "Maximum amount of time that a task can run for",
-      "type": "integer",
+      "type": "number",
       "minimum": 1
     },
     "base_step": {

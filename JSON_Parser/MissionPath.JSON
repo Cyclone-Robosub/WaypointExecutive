@@ -52,6 +52,7 @@
           "type": "manipulation",
           "manipulation_command": 0,
           "max_time": 2
+
         }
       ]
     }

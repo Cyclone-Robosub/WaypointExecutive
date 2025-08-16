@@ -66,6 +66,11 @@ void MissionAnalyzer::parseJSONForMission()
         for (auto& stepJson : taskJson["steps"]) {
             Step step;
             std::string taskType = stepJson["type"];
+
+            if(taskType == "wait") {
+                double holdTime = stepJson["time"].get<double>();
+                step.HoldWaypTime_TimeElapsed = std::make_pair(holdTime, 0.0);
+            }
             if (stepJson.contains("position")) {
                 Position pos = makePositionFromJSON(stepJson["position"]);
                 step.WaypointPointer = std::make_shared<Position>(pos);
