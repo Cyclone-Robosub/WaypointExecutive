@@ -1,0 +1,62 @@
+ece0064 HEAD@{Sat Aug 16 19:54:58 2025}: checkout: moving from main to DO_NOT_TOUCH_COMPETITION_VERSION
+ece0064 HEAD@{Sat Aug 16 19:31:16 2025}: commit: update JSONpath
+6e352c6 HEAD@{Sat Aug 16 19:28:24 2025}: commit: tolerance fix
+bbfa80d HEAD@{Sat Aug 16 19:27:52 2025}: pull --tags origin main: Fast-forward
+872656c HEAD@{Sat Aug 16 18:05:27 2025}: commit: stupid
+14dbcb0 HEAD@{Sat Aug 16 18:01:03 2025}: pull --tags origin main: Fast-forward
+cbc436f HEAD@{Sat Aug 16 07:14:11 2025}: checkout: moving from ResetTimer to main
+0d429cc HEAD@{Sat Aug 16 07:14:08 2025}: pull --tags origin ResetTimer: Fast-forward
+7d608b7 HEAD@{Sat Aug 16 07:14:05 2025}: checkout: moving from main to ResetTimer
+cbc436f HEAD@{Sat Aug 16 07:14:02 2025}: pull --tags origin main: Fast-forward
+1507056 HEAD@{Sat Aug 16 07:13:58 2025}: checkout: moving from ResetTimer to main
+7d608b7 HEAD@{Sat Aug 16 07:12:31 2025}: commit: ready.
+8e06193 HEAD@{Sat Aug 16 07:10:26 2025}: checkout: moving from main to ResetTimer
+1507056 HEAD@{Sat Aug 16 07:10:23 2025}: reset: moving to HEAD
+1507056 HEAD@{Sat Aug 16 07:07:50 2025}: checkout: moving from main to main
+1507056 HEAD@{Sat Aug 16 07:05:57 2025}: commit: update
+9f8fe3e HEAD@{Fri Aug 15 04:04:15 2025}: checkout: moving from main to main
+9f8fe3e HEAD@{Fri Aug 15 04:01:27 2025}: pull --tags origin main: Fast-forward
+631b066 HEAD@{Fri Aug 15 02:50:22 2025}: pull --tags origin main: Fast-forward
+0091b61 HEAD@{Fri Aug 15 02:43:21 2025}: checkout: moving from ResetTimer to main
+8e06193 HEAD@{Fri Aug 15 02:42:49 2025}: commit: ResetTimer
+0091b61 HEAD@{Fri Aug 15 02:42:44 2025}: checkout: moving from main to ResetTimer
+0091b61 HEAD@{Fri Aug 15 02:42:20 2025}: reset: moving to HEAD~1
+70acddd HEAD@{Fri Aug 15 02:39:37 2025}: commit: ResetTimer
+0091b61 HEAD@{Thu Aug 14 22:00:52 2025}: commit: update something
+43e6ef4 HEAD@{Thu Aug 14 21:58:56 2025}: commit: IT WORKS.
+d474ce8 HEAD@{Thu Aug 14 21:06:30 2025}: pull --tags origin main: Fast-forward
+842f461 HEAD@{Thu Aug 14 20:54:17 2025}: pull --tags origin main: Fast-forward
+a707eae HEAD@{Thu Aug 14 19:33:13 2025}: pull --tags origin main: Fast-forward
+38f04e7 HEAD@{Thu Aug 14 16:27:33 2025}: pull: Fast-forward
+b1c1639 HEAD@{Thu Aug 14 14:33:29 2025}: commit: test now works.
+dcd9c7a HEAD@{Thu Aug 14 14:12:03 2025}: pull --tags origin main: Fast-forward
+7dd7408 HEAD@{Thu Aug 14 14:12:00 2025}: reset: moving to HEAD
+7dd7408 HEAD@{Thu Aug 14 08:21:50 2025}: pull --tags origin main: Fast-forward
+db2b5cb HEAD@{Thu Aug 14 07:16:31 2025}: pull: Fast-forward
+0f94396 HEAD@{Thu Aug 14 07:16:28 2025}: checkout: moving from db2b5cb5713086252c57ddbe0793cc32b5be73bd to main
+db2b5cb HEAD@{Thu Aug 14 07:15:34 2025}: checkout: moving from main to db2b5cb5713086252c57ddbe0793cc32b5be73bd
+0f94396 HEAD@{Thu Aug 14 06:35:42 2025}: pull --tags origin main: Fast-forward
+9d2fcf4 HEAD@{Thu Aug 14 05:13:33 2025}: pull --tags origin main: Fast-forward
+fc848c5 HEAD@{Thu Aug 14 04:02:09 2025}: commit: cmake
+0e28388 HEAD@{Thu Aug 14 03:41:17 2025}: commit: publish new
+d1ce3d6 HEAD@{Thu Aug 14 03:22:55 2025}: commit: Example of New Formatting.
+f83b1f6 HEAD@{Thu Aug 14 01:20:49 2025}: commit: Tasks Lists
+7c7d37a HEAD@{Thu Aug 14 00:36:39 2025}: commit: Schema
+b3626c2 HEAD@{Thu Aug 14 00:08:12 2025}: commit: Push changes to crs
+ea44b32 HEAD@{Thu Aug 14 00:03:44 2025}: checkout: moving from ea44b32d4eaf5d06c6600556428e7d68ea42e5d4 to main
+ea44b32 HEAD@{Thu Aug 14 00:03:35 2025}: checkout: moving from main to ea44b32d4eaf5d06c6600556428e7d68ea42e5d4
+ea44b32 HEAD@{Wed Aug 13 23:23:23 2025}: commit: WORKS
+98c31ce HEAD@{Wed Aug 13 22:19:09 2025}: commit: saving this for now
+1e494a6 HEAD@{Wed Aug 13 21:53:45 2025}: commit: commiting for now
+a43b2eb HEAD@{Wed Aug 13 16:51:10 2025}: pull --tags origin main: Fast-forward
+e5200bd HEAD@{Wed Aug 13 05:45:06 2025}: commit: Finish
+ee4fc49 HEAD@{Wed Aug 13 05:27:28 2025}: commit: Waypoint post
+3e3219d HEAD@{Wed Aug 13 04:53:01 2025}: commit: gtest
+5472b1b HEAD@{Wed Aug 13 01:29:30 2025}: commit: new changes
+b4ee3b8 HEAD@{Wed Aug 13 01:11:51 2025}: commit: runtimeerror fixing
+70c98b4 HEAD@{Tue Aug 12 22:51:36 2025}: checkout: moving from main to main
+70c98b4 HEAD@{Tue Aug 12 22:48:03 2025}: commit: removed crs_common
+29742e7 HEAD@{Tue Aug 12 22:31:39 2025}: reset: moving to HEAD
+29742e7 HEAD@{Tue Aug 12 22:30:28 2025}: pull --tags origin main: Fast-forward
+77a9b68 HEAD@{Tue Aug 12 22:30:26 2025}: reset: moving to HEAD
+77a9b68 HEAD@{Tue Aug 12 02:51:33 2025}: clone: from https://github.com/Cyclone-Robosub/WaypointExecutive.git
