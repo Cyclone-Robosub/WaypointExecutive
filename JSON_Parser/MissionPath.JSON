@@ -6,15 +6,15 @@
       "steps": [
         {
           "type": "waypoint",
-          "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
+          "position": [1.0, 2.0, 1.0, 0.0, 0.0, 90.0],
           "hold_time": 2.5,
-          "max_time": 1
+          "max_time": 8
         },
         {
           "type": "vision",
-          "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
+          "position": [1.0, 2.0, 1.0, 0.0, 0.0, 90.0],
           "vision_command": "BOX_DETECED",
-          "max_time": 1
+          "max_time": 8
         }
       ]
     },
@@ -24,9 +24,9 @@
         {
           "type": "manipulation",
           "manipulation_command": 1,
-          "position": [1.0, 2.0, 0.0, 0.0, 0.0, 90.0],
+          "position": [1.0, 2.0, 1.0, 0.0, 0.0, 90.0],
           "hold_time": 1,
-          "max_time": 2
+          "max_time": 8
         }
       ]
     },
@@ -46,12 +46,12 @@
           "type": "waypoint",
           "position": [5.0, 3.0, 0.0, 0.0, 0.0, 180.0],
           "hold_time": 1.0,
-          "max_time": 2
+          "max_time": 8
         },
         {
           "type": "manipulation",
           "manipulation_command": 0,
-          "max_time": 2
+          "max_time": 8
 
         }
       ]
