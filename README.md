@@ -14,8 +14,8 @@
     Its main inputs are a Mission Path file, position, vision, and battery interrupts.
     Its only output is a desired waypoint at the current time.
 ## What is a task and a step?
-    A task is a major action, expectation, or obstacle that the robot should perform, such as attempting to find and pass through the gate.
-    A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act on, or a manipulation objective that the robot needs to execute. 
+A task is a major action, expectation, or obstacle that the robot should perform, such as attempting to find and pass through the gate.
+A step is part of a task that can include a waypoint that the robot needs to go to, a vision object or command that the robot needs to see and act on, or a manipulation objective that the robot needs to execute. 
 ## How is a step deemed completed?
     If the robot goes to the waypoint and either holds or touches it as instructed.
         OR
@@ -38,5 +38,5 @@
     If the battery is too low -> Surface, Make a Report, and Stop Operating.
     If the Robot saw an object -> Execute actions that have already been cleared to do so by pre-existing conditions, requirements, and commands.
     If the robot needs to trigger the manipulation code. -> Send the command through ROS.
-## What are some examples of the controller's decision-making?
-    Imagine the robot needs to look for the gate, choose the right side, and needs to go through it. The Mission file should contain the waypoints of each step, with one of the steps being a vision command attached so that the robot can be interrupted once it spots the object and can attempt the next waypoint.
+# What are some examples of the controller's decision-making?
+Imagine the robot needs to look for the gate, choose the right side, and needs to go through it. The Mission file should contain the waypoints of each step, with one of the steps being a vision command attached so that the robot can be interrupted once it spots the object and can attempt the next waypoint.
