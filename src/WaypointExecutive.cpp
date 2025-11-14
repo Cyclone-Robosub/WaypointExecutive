@@ -27,7 +27,7 @@ void WaypointExecutive::SetupROS() {
   VisionOptions.callback_group = callbackINT;
 
   WaypointPublisher = this->create_publisher<std_msgs::msg::Float32MultiArray>(
-      "waypoint_topic", 10);
+      "waypoint", 10); //Edit type of publisher with custom one.
        Camera1Publisher = this->create_publisher<std_msgs::msg::Bool>(
       "camera1_command_topic", 10);
        Camera2Publisher = this->create_publisher<std_msgs::msg::Bool>(
