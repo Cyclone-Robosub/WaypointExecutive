@@ -19,6 +19,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 # Add include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -53,7 +54,9 @@ ament_target_dependencies(${PROJECT_NAME}
   std_msgs
   geometry_msgs
 )
-
+rosidl_generate_interfaces(${PROJECT_NAME}
+  #Insert custom msg position for waypoint.
+ )
 # Testing
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
